@@ -16,10 +16,10 @@
 package com.zakl.nettyrpcclient.client;
 
 import com.google.common.reflect.Reflection;
-import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpcclient.serialize.RpcSerializeProtocol;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MessageSendExecutor.java
  * @description:MessageSendExecutor功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -27,14 +27,14 @@ import com.newlandframework.rpc.serialize.RpcSerializeProtocol;
  */
 public class MessageSendExecutor {
     private static class MessageSendExecutorHolder {
-        private static final com.newlandframework.rpc.client.MessageSendExecutor INSTANCE = new com.newlandframework.rpc.client.MessageSendExecutor();
+        private static final MessageSendExecutor INSTANCE = new MessageSendExecutor();
     }
 
-    public static com.newlandframework.rpc.client.MessageSendExecutor getInstance() {
+    public static MessageSendExecutor getInstance() {
         return MessageSendExecutorHolder.INSTANCE;
     }
 
-    private com.newlandframework.rpc.client.RpcServerLoader loader = com.newlandframework.rpc.client.RpcServerLoader.getInstance();
+    private RpcServerLoader loader = RpcServerLoader.getInstance();
 
     private MessageSendExecutor() {
 
