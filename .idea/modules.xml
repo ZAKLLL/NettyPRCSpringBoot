@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/NettyPRCSpringBoot.iml" filepath="$PROJECT_DIR$/.idea/NettyPRCSpringBoot.iml" />
       <module fileurl="file://$PROJECT_DIR$/nettyrpcclient/nettyrpcclient.iml" filepath="$PROJECT_DIR$/nettyrpcclient/nettyrpcclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nettyrpcserver/nettyrpcserver.iml" filepath="$PROJECT_DIR$/nettyrpcserver/nettyrpcserver.iml" />
     </modules>
   </component>
 </project>
