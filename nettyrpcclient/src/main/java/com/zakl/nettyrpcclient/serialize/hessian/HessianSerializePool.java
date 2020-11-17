@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcclient.serialize.protostuff;
+package com.zakl.nettyrpcclient.serialize.hessian;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -23,32 +23,33 @@ import static com.zakl.nettyrpcclient.config.RpcSystemConfig.*;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:ProtostuffSerializePool.java
- * @description:ProtostuffSerializePool功能模块
+ * @filename:HessianSerializePool.java
+ * @description:HessianSerializePool功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class ProtostuffSerializePool {
-    private GenericObjectPool<ProtostuffSerialize> protostuffPool;
-    private static volatile ProtostuffSerializePool poolFactory = null;
+public class HessianSerializePool {
 
-    private ProtostuffSerializePool() {
-        protostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());
+    private GenericObjectPool<HessianSerialize> hessianPool;
+    private static volatile HessianSerializePool poolFactory = null;
+
+    private HessianSerializePool() {
+        hessianPool = new GenericObjectPool<HessianSerialize>(new HessianSerializeFactory());
     }
 
-    public static ProtostuffSerializePool getProtostuffPoolInstance() {
+    public static HessianSerializePool getHessianPoolInstance() {
         if (poolFactory == null) {
-            synchronized (ProtostuffSerializePool.class) {
+            synchronized (HessianSerializePool.class) {
                 if (poolFactory == null) {
-                    poolFactory = new ProtostuffSerializePool(SERIALIZE_POOL_MAX_TOTAL, SERIALIZE_POOL_MIN_IDLE, SERIALIZE_POOL_MAX_WAIT_MILLIS, SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+                    poolFactory = new HessianSerializePool(SERIALIZE_POOL_MAX_TOTAL, SERIALIZE_POOL_MIN_IDLE, SERIALIZE_POOL_MAX_WAIT_MILLIS, SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS);
                 }
             }
         }
         return poolFactory;
     }
 
-    public ProtostuffSerializePool(final int maxTotal, final int minIdle, final long maxWaitMillis, final long minEvictableIdleTimeMillis) {
-        protostuffPool = new GenericObjectPool<ProtostuffSerialize>(new ProtostuffSerializeFactory());
+    public HessianSerializePool(final int maxTotal, final int minIdle, final long maxWaitMillis, final long minEvictableIdleTimeMillis) {
+        hessianPool = new GenericObjectPool<HessianSerialize>(new HessianSerializeFactory());
 
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
 
@@ -57,24 +58,23 @@ public class ProtostuffSerializePool {
         config.setMaxWaitMillis(maxWaitMillis);
         config.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
 
-        protostuffPool.setConfig(config);
+        hessianPool.setConfig(config);
     }
 
-    public ProtostuffSerialize borrow() {
+    public HessianSerialize borrow() {
         try {
-            return getProtostuffPool().borrowObject();
+            return getHessianPool().borrowObject();
         } catch (final Exception ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
-    public void restore(final ProtostuffSerialize object) {
-        getProtostuffPool().returnObject(object);
+    public void restore(final HessianSerialize object) {
+        getHessianPool().returnObject(object);
     }
 
-    public GenericObjectPool<ProtostuffSerialize> getProtostuffPool() {
-        return protostuffPool;
+    public GenericObjectPool<HessianSerialize> getHessianPool() {
+        return hessianPool;
     }
 }
-

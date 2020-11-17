@@ -5,8 +5,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(value = BeanUtils.BeanName)
 public class BeanUtils implements ApplicationContextAware {
+    public final static String BeanName = "beanUtils";
+
     private static ApplicationContext applicationContext;
 
     @Override

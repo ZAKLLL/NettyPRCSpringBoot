@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcclient.parallel;
 
 
-import com.zakl.nettyrpcclient.core.RpcSystemConfig;
+import com.zakl.nettyrpcclient.config.RpcSystemConfig;
 import com.zakl.nettyrpcclient.parallel.policy.*;
 
 import java.util.Timer;

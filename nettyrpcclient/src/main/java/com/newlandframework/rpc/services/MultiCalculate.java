@@ -13,29 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcclient.event;
-
-import com.google.common.eventbus.Subscribe;
-import com.zakl.nettyrpcclient.core.MessageSendExecutor;
+package com.newlandframework.rpc.services;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:ClientStopEventListener.java
- * @description:ClientStopEventListener功能模块
+ * @filename:Calculate.java
+ * @description:Calculate功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class ClientStopEventListener {
-    public int lastMessage = 0;
-
-    @Subscribe
-    public void listen(ClientStopEvent event) {
-        lastMessage = event.getMessage();
-        MessageSendExecutor.getInstance().stop();
-    }
-
-    public int getLastMessage() {
-        return lastMessage;
-    }
+public interface MultiCalculate {
+    //两数相乘
+    int multi(int a, int b);
 }
 

@@ -13,29 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcclient.event;
+package com.zakl.nettyrpcclient.serialize.hessian;
 
-import com.google.common.eventbus.Subscribe;
-import com.zakl.nettyrpcclient.core.MessageSendExecutor;
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:ClientStopEventListener.java
- * @description:ClientStopEventListener功能模块
+ * @filename:HessianSerializeFactory.java
+ * @description:HessianSerializeFactory功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class ClientStopEventListener {
-    public int lastMessage = 0;
+public class HessianSerializeFactory extends BasePooledObjectFactory<HessianSerialize> {
 
-    @Subscribe
-    public void listen(ClientStopEvent event) {
-        lastMessage = event.getMessage();
-        MessageSendExecutor.getInstance().stop();
+    @Override
+    public HessianSerialize create() throws Exception {
+        return createHessian();
     }
 
-    public int getLastMessage() {
-        return lastMessage;
+    @Override
+    public PooledObject<HessianSerialize> wrap(HessianSerialize hessian) {
+        return new DefaultPooledObject<HessianSerialize>(hessian);
+    }
+
+    private HessianSerialize createHessian() {
+        return new HessianSerialize();
     }
 }
 
