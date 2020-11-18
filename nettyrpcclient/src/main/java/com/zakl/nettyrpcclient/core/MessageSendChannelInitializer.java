@@ -15,7 +15,7 @@
  */
 package com.zakl.nettyrpcclient.core;
 
-import com.zakl.nettyrpcclient.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

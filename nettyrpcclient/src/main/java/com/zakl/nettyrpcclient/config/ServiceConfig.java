@@ -1,7 +1,7 @@
 package com.zakl.nettyrpcclient.config;
 
-import com.zakl.nettyrpcclient.serialize.RpcSerializeProtocol;
-import com.zakl.nettyrpcclient.util.BeanUtils;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpc.common.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;

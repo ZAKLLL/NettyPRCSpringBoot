@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcclient.core;
 
 import com.google.common.reflect.Reflection;
-import com.zakl.nettyrpcclient.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>

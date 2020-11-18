@@ -1,10 +1,11 @@
 package com.zakl.nettyrpcclient.controller;
 
 import com.newlandframework.rpc.services.AddCalculate;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * @author ZhangJiaKui
@@ -21,7 +22,7 @@ public class TestController {
 
     @GetMapping("/add")
     public int add(int a, int b) {
-        log.info("info");
+//        log.info("info");
         return addCalculate.add(a, b);
     }
 }

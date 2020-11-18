@@ -15,9 +15,9 @@
  */
 package com.zakl.nettyrpcclient.core;
 
-import com.zakl.nettyrpcclient.config.RpcSystemConfig;
-import com.zakl.nettyrpcclient.handler.MessageSendHandler;
-import com.zakl.nettyrpcclient.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpc.common.config.RpcSystemConfig;
+import com.zakl.nettyrpc.common.handler.MessageSendHandler;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;

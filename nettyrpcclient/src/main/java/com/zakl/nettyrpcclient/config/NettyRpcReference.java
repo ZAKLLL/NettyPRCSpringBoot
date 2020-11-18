@@ -19,7 +19,7 @@ import com.google.common.eventbus.EventBus;
 import com.zakl.nettyrpcclient.core.MessageSendExecutor;
 import com.zakl.nettyrpcclient.event.ClientStopEvent;
 import com.zakl.nettyrpcclient.event.ClientStopEventListener;
-import com.zakl.nettyrpcclient.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
