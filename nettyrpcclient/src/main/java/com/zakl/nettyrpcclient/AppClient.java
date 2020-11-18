@@ -18,7 +18,7 @@ public class AppClient {
         SpringApplication.run(AppClient.class, args);
         ApplicationContext applicationContext = BeanUtils.getApplicationContext();
         System.out.println();
-//        AddCalculate addc = (AddCalculate) applicationContext.getBean("com.newlandframework.rpc.services.AddCalculate");
+//        AddCalculate addc = (AddCalculate) applicationContext.getBean("com.newlandframework.rpc.com.zakl.nettyrpcserver.services.AddCalculate");
 //
 //        int add = addc.add(1, 2);
 //        System.out.println(add);

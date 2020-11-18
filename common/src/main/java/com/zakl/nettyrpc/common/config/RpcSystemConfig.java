@@ -16,7 +16,7 @@
 package com.zakl.nettyrpc.common.config;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:RpcSystemConfig.java
  * @description:RpcSystemConfig功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -34,8 +34,8 @@ public class RpcSystemConfig {
     public static final int SYSTEM_PROPERTY_JMX_INVOKE_METRICS = Integer.getInteger("nettyrpc.jmx.invoke.metrics", 1);
     public static final int SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS = Integer.getInteger("nettyrpc.jmx.metrics.hash.nums", 8);
     public static final int SYSTEM_PROPERTY_JMX_METRICS_LOCK_FAIR = Integer.getInteger("nettyrpc.jmx.metrics.lock.fair", 0);
-//    public static final boolean SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT = com.newlandframework.rpc.core.RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS != 1;
-//    public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = com.newlandframework.rpc.core.RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
+    public static final boolean SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS != 1;
+    public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
     public static final String DELIMITER = ":";
     public static final int IPADDR_OPRT_ARRAY_LENGTH = 2;
     public static final String RPC_COMPILER_SPI_ATTR = "com.newlandframework.rpc.compiler.AccessAdaptive";
