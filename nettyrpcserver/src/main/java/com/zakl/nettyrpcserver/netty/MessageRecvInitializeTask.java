@@ -15,16 +15,15 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
-import com.newlandframework.rpc.core.ReflectionUtils;
-import com.newlandframework.rpc.filter.ServiceFilterBinder;
-import com.newlandframework.rpc.jmx.ModuleMetricsHandler;
-import com.newlandframework.rpc.jmx.ModuleMetricsVisitor;
-import com.newlandframework.rpc.model.MessageRequest;
-import com.newlandframework.rpc.model.MessageResponse;
-import com.newlandframework.rpc.parallel.SemaphoreWrapperFactory;
-import com.newlandframework.rpc.server.event.*;
-import com.newlandframework.rpc.server.event.AbstractInvokeEventBus.ModuleEvent;
-
+import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpc.common.model.MessageResponse;
+import com.zakl.nettyrpc.common.parallel.SemaphoreWrapperFactory;
+import com.zakl.nettyrpcserver.core.ReflectionUtils;
+import com.zakl.nettyrpcserver.event.*;
+import com.zakl.nettyrpcserver.filter.ServiceFilterBinder;
+import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsHandler;
+import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsVisitor;
+import com.zakl.nettyrpcserver.event.AbstractInvokeEventBus;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,7 +62,7 @@ public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask
             visitor.set(ModuleMetricsHandler.getInstance().visit(request.getClassName(), signatureMethod));
             facade.set(new InvokeEventBusFacade(ModuleMetricsHandler.getInstance(), visitor.get().getModuleName(), visitor.get().getMethodName()));
             watcher.get().addObserver(new InvokeObserver(facade.get(), visitor.get()));
-            watcher.get().watch(ModuleEvent.INVOKE_EVENT);
+            watcher.get().watch(AbstractInvokeEventBus.ModuleEvent.INVOKE_EVENT);
         } finally {
             utils.clearProvider();
         }
@@ -72,19 +71,19 @@ public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask
     @Override
     protected void injectSuccInvoke(long invokeTimespan) {
         watcher.get().addObserver(new InvokeSuccObserver(facade.get(), visitor.get(), invokeTimespan));
-        watcher.get().watch(ModuleEvent.INVOKE_SUCC_EVENT);
+        watcher.get().watch(AbstractInvokeEventBus.ModuleEvent.INVOKE_SUCC_EVENT);
     }
 
     @Override
     protected void injectFailInvoke(Throwable error) {
         watcher.get().addObserver(new InvokeFailObserver(facade.get(), visitor.get(), error));
-        watcher.get().watch(ModuleEvent.INVOKE_FAIL_EVENT);
+        watcher.get().watch(AbstractInvokeEventBus.ModuleEvent.INVOKE_FAIL_EVENT);
     }
 
     @Override
     protected void injectFilterInvoke() {
         watcher.get().addObserver(new InvokeFilterObserver(facade.get(), visitor.get()));
-        watcher.get().watch(ModuleEvent.INVOKE_FILTER_EVENT);
+        watcher.get().watch(AbstractInvokeEventBus.ModuleEvent.INVOKE_FILTER_EVENT);
     }
 
     @Override

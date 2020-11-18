@@ -15,7 +15,8 @@
  */
 package com.zakl.nettyrpcserver.compiler;
 
-import com.newlandframework.rpc.compiler.weaver.ProxyProvider;
+
+import com.zakl.nettyrpcserver.compiler.weaver.ProxyProvider;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

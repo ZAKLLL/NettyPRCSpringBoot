@@ -15,8 +15,8 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
-import com.newlandframework.rpc.model.MessageRequest;
-import com.newlandframework.rpc.model.MessageResponse;
+import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpc.common.model.MessageResponse;
 
 import java.util.Map;
 

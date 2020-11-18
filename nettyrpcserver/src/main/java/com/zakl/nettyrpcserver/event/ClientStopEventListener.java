@@ -16,7 +16,6 @@
 package com.zakl.nettyrpcserver.event;
 
 import com.google.common.eventbus.Subscribe;
-import com.newlandframework.rpc.client.MessageSendExecutor;
 
 /**
  * @author tangjie<https://github.com/tang-jie>

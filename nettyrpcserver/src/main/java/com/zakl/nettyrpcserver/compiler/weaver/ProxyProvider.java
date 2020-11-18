@@ -15,9 +15,10 @@
  */
 package com.zakl.nettyrpcserver.compiler.weaver;
 
-import com.newlandframework.rpc.compiler.intercept.Interceptor;
-import com.newlandframework.rpc.compiler.invoke.InterceptorInvoker;
-import com.newlandframework.rpc.compiler.invoke.ObjectInvoker;
+
+import com.zakl.nettyrpcserver.compiler.intercept.Interceptor;
+import com.zakl.nettyrpcserver.compiler.invoke.InterceptorInvoker;
+import com.zakl.nettyrpcserver.compiler.invoke.ObjectInvoker;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
