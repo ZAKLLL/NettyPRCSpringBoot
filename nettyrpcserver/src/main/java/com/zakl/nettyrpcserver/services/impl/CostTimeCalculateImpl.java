@@ -3,14 +3,16 @@ package com.zakl.nettyrpcserver.services.impl;
 
 import com.zakl.nettyrpcserver.pojo.CostTime;
 import com.zakl.nettyrpcserver.services.CostTimeCalculate;
+import org.springframework.stereotype.Service;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:CostTimeCalculateImpl.java
  * @description:CostTimeCalculateImpl功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/3/22
  */
+@Service(CostTimeCalculate.SERVIVE_BEAN_NAME)
 public class CostTimeCalculateImpl implements CostTimeCalculate {
     @Override
     public CostTime calculate() {

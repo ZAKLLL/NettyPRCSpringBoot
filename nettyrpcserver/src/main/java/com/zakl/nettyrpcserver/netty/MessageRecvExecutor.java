@@ -143,7 +143,6 @@ public class MessageRecvExecutor implements ApplicationContextAware {
                 });
                 future.channel().closeFuture().sync().addListener(i -> executor.shutdown());
             }
-
         } catch (InterruptedException e) {
             System.out.println("[author tangjie] Netty RPC Server start fail!");
             e.printStackTrace();

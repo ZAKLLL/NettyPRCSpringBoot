@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.zakl.nettyrpcserver.netty;
+
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.parallel.HashCriticalSection;
@@ -32,7 +33,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:HashMessageRecvInitializeTask.java
  * @description:HashMessageRecvInitializeTask功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -63,7 +64,8 @@ public class HashMessageRecvInitializeTask extends AbstractMessageRecvInitialize
             utils.listMethod(method, false);
             String signatureMethod = utils.getProvider().toString().trim();
             int index = getHashVisitorListIndex(signatureMethod);
-            List<ModuleMetricsVisitor> metricsVisitor = HashModuleMetricsVisitor.getInstance().getHashVisitorList().get(index);
+            List<List<ModuleMetricsVisitor>> hashVisitorList = HashModuleMetricsVisitor.getInstance().getHashVisitorList();
+            List<ModuleMetricsVisitor> metricsVisitor = hashVisitorList.get(index);
             visitor.set(metricsVisitor.get(hashKey));
             incrementInvoke(visitor.get());
         } finally {

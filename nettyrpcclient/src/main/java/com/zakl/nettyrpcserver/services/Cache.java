@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.newlandframework.rpc.services;
-
-
-import com.newlandframework.rpc.pojo.CostTime;
+package com.zakl.nettyrpcserver.services;
 
 /**
- * @author tangjie<https: / / github.com / tang-jie>
- * @filename:CostTimeCalculate.java
- * @description:CostTimeCalculate功能模块
+ * @author tangjie<https://github.com/tang-jie>
+ * @filename:Cache.java
+ * @description:Cache功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/3/22
+ * @since 2017/7/28
  */
-public interface CostTimeCalculate {
-    CostTime calculate();
+public interface Cache {
 
-    CostTime busy();
+    void put(Object key, Object value);
+
+    Object get(Object key);
+
 }
 

@@ -22,8 +22,10 @@ import com.zakl.nettyrpcserver.netty.jmx.HashModuleMetricsVisitor;
 import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsHandler;
 import com.zakl.nettyrpcserver.netty.jmx.ThreadPoolMonitorProvider;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,6 +39,7 @@ import java.util.concurrent.Executors;
  * @since 2016/10/7
  */
 @Component(value = NettyRpcRegistry.REGISTRY_BEAN_NAME)
+@DependsOn(ServiceConfig.SERVICE_CONFIG_BEAN_NAME)
 public class NettyRpcRegistry implements DisposableBean {
     public final static String REGISTRY_BEAN_NAME = "nettyRpcRegistry";
     @Value("${netty.rpc.server.ipAddr}")
@@ -51,6 +54,8 @@ public class NettyRpcRegistry implements DisposableBean {
     @Value("${netty.rpc.server.echoApiPort}")
     private String echoApiPort;
 
+    @Autowired
+    private ServiceConfig serviceConfig;
 
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
@@ -67,6 +72,8 @@ public class NettyRpcRegistry implements DisposableBean {
 
     @PostConstruct
     public void init() {
+
+        System.out.println(serviceConfig);
         MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
         ref.setServerAddress(ipAddr, port);
         ref.setEchoApiPort(Integer.parseInt(echoApiPort));
@@ -79,7 +86,6 @@ public class NettyRpcRegistry implements DisposableBean {
 
         //todo 用后台线程运行Netty Server(尚未验证是否影响服务)
         Executors.newSingleThreadExecutor().execute(ref::start);
-
 
         if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
             HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();

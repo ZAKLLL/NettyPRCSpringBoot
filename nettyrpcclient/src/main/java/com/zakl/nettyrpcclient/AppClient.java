@@ -1,9 +1,5 @@
 package com.zakl.nettyrpcclient;
 
-import com.newlandframework.rpc.services.AddCalculate;
-import com.newlandframework.rpc.services.CostTimeCalculate;
-import com.newlandframework.rpc.services.MultiCalculate;
-import com.newlandframework.rpc.pojo.CostTime;
 import com.zakl.nettyrpc.common.util.BeanUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

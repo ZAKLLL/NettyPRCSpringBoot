@@ -128,21 +128,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
                     semaphoreWrapper.release();
 
                     System.out.printf("NettyRPC JMX server is start success!\njmx-url:[ %s ]\n\n", moduleMetricsJmxUrl);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (MBeanRegistrationException e) {
-                    e.printStackTrace();
-                } catch (InstanceAlreadyExistsException e) {
-                    e.printStackTrace();
-                } catch (NotCompliantMBeanException e) {
-                    e.printStackTrace();
-                } catch (MalformedObjectNameException e) {
-                    e.printStackTrace();
-                } catch (InstanceNotFoundException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (IOException | MBeanRegistrationException | InstanceAlreadyExistsException | NotCompliantMBeanException | MalformedObjectNameException | InstanceNotFoundException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }

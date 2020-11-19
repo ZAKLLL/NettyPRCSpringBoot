@@ -19,13 +19,15 @@ package com.zakl.nettyrpcserver.services;
 import com.zakl.nettyrpcserver.pojo.CostTime;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:CostTimeCalculate.java
  * @description:CostTimeCalculate功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/3/22
  */
 public interface CostTimeCalculate {
+    String SERVIVE_BEAN_NAME = "costTimeCalculate";
+
     CostTime calculate();
 
     CostTime busy();

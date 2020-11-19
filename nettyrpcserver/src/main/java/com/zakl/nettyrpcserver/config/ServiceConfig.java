@@ -1,23 +1,17 @@
 package com.zakl.nettyrpcserver.config;
 
-import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpc.common.util.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import com.zakl.nettyrpcserver.filter.Filter;
+import com.zakl.nettyrpcserver.filter.ServiceFilterBinder;
+import com.zakl.nettyrpcserver.netty.MessageRecvExecutor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,15 +23,25 @@ import java.util.Map;
 @Component
 @DependsOn(BeanUtils.BeanName)
 public class ServiceConfig {
+    public final static String SERVICE_CONFIG_BEAN_NAME = "serviceConfig";
 
+    public final static String filter = "simpleFilter";
 
     @PostConstruct
     public void init() {
-        ApplicationContext applicationContext = BeanUtils.getApplicationContext();
+        ApplicationContext ctx = BeanUtils.getApplicationContext();
         //该方法会注定去加载注入被@Service 注解的Bean(如果对应的Bean没有被注入进去)
-        Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(Service.class);
-        //todo 将对应的类注入
-        System.out.println();
+        Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(Service.class);
+        Map<String, Object> handlerMap = MessageRecvExecutor.getInstance().getHandlerMap();
+        for (String s : serviceBeanMap.keySet()) {
+            //因为远程调用面向接口编程,所以单一实现接口,取index==0即可
+            Class<?> c = serviceBeanMap.get(s).getClass().getInterfaces()[0];
+            ServiceFilterBinder binder = new ServiceFilterBinder();
+            binder.setFilter((Filter) ctx.getBean(filter));
+            binder.setObject(serviceBeanMap.get(s));
+            handlerMap.put(c.getName(), binder);
+        }
+
     }
 
 }
