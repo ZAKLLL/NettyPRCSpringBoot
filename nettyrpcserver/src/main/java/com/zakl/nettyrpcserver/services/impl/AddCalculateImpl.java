@@ -33,4 +33,7 @@ public class AddCalculateImpl implements AddCalculate {
     public int add(int a, int b) {
         return a + b;
     }
+    static {
+        System.out.println("-------");
+    }
 }

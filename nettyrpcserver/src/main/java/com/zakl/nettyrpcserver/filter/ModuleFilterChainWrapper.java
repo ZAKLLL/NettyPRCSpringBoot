@@ -15,20 +15,22 @@
  */
 package com.zakl.nettyrpcserver.filter;
 
-import com.newlandframework.rpc.core.Modular;
-import com.newlandframework.rpc.core.ModuleInvoker;
-import com.newlandframework.rpc.core.ModuleProvider;
-import com.newlandframework.rpc.model.MessageRequest;
+import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpcserver.core.Modular;
+import com.zakl.nettyrpcserver.core.ModuleInvoker;
+import com.zakl.nettyrpcserver.core.ModuleProvider;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:ModuleFilterChainWrapper.java
  * @description:ModuleFilterChainWrapper功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/2/2
  */
+//@Component(value = "modular")
 public class ModuleFilterChainWrapper implements Modular {
     private Modular modular;
     private List<ChainFilter> filters;

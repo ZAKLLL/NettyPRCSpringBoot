@@ -23,6 +23,7 @@ package com.zakl.nettyrpcserver.filter;
  * @since 2017/7/27
  */
 public class ServiceFilterBinder {
+    //serviceBean 实际工作的服务实现类Impl
     private Object object;
     private Filter filter;
 

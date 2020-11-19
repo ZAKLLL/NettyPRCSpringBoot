@@ -112,6 +112,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         ProxyFactory weaver = new ProxyFactory(new MethodInvoker());
         NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
         advisor.setMappedName(METHOD_MAPPED_NAME);
+        //设置AOP 方法
         advisor.setAdvice(new MethodProxyAdvisor(handlerMap));
         weaver.addAdvisor(advisor);
         MethodInvoker mi = (MethodInvoker) weaver.getProxy();

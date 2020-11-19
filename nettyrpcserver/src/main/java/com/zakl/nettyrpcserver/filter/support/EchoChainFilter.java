@@ -19,6 +19,7 @@ package com.zakl.nettyrpcserver.filter.support;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpcserver.core.ModuleInvoker;
 import com.zakl.nettyrpcserver.filter.ChainFilter;
+import org.springframework.stereotype.Component;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -27,7 +28,9 @@ import com.zakl.nettyrpcserver.filter.ChainFilter;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/1/31
  */
+@Component
 public class EchoChainFilter implements ChainFilter {
+
     @Override
     public Object invoke(ModuleInvoker<?> invoker, MessageRequest request) throws Throwable {
         Object o = null;

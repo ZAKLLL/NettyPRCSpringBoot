@@ -17,6 +17,7 @@ package com.zakl.nettyrpcserver.filter.support;
 
 import com.zakl.nettyrpcserver.filter.Filter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
@@ -27,7 +28,9 @@ import java.lang.reflect.Method;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/7/27
  */
+@Component
 public class SimpleFilter implements Filter {
+
     @Override
     public boolean before(Method method, Object processor, Object[] requestObjects) {
         System.out.println(StringUtils.center("[SimpleFilter##before]", 48, "*"));

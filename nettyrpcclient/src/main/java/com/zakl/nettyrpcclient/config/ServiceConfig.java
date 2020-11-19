@@ -8,6 +8,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -23,7 +24,7 @@ import java.util.List;
  * @description 动态注入接口，使用动态代理的方式进行远程调用
  * @date 11/17/2020 9:57 AM
  */
-@Configuration
+@Component
 @DependsOn(BeanUtils.BeanName)
 public class ServiceConfig {
 

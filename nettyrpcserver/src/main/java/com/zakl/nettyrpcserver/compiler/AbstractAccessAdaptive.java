@@ -17,6 +17,7 @@ package com.zakl.nettyrpcserver.compiler;
 
 
 import com.zakl.nettyrpcserver.compiler.weaver.ProxyProvider;
+import com.zakl.nettyrpcserver.compiler.weaver.ClassProxy;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:AbstractAccessAdaptive.java
  * @description:AbstractAccessAdaptive功能模块
  * @blogs http://www.cnblogs.com/jietang/

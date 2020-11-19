@@ -52,13 +52,7 @@ public class AccessAdaptiveProvider extends AbstractAccessAdaptive implements Ac
                 Thread.currentThread().getContextClassLoader().loadClass(type.getName());
                 Object proxy = getFactory().createProxy(object, new SimpleMethodInterceptor(), new Class[]{type});
                 return MethodUtils.invokeMethod(proxy, method, args);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
             return null;

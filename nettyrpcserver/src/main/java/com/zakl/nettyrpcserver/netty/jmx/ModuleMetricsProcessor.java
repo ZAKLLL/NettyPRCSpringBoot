@@ -112,18 +112,18 @@ public class ModuleMetricsProcessor {
                     String lastErrorTime = (String) (data.get("lastErrorTime"));
                     String distribute = buildHistogram(data);
                     metrics.append(TR_BEGIN);
-                    metrics.append(TD_BEGIN + moduleName + TD_END);
-                    metrics.append(TD_BEGIN + methodName + TD_END);
-                    metrics.append(TD_BEGIN + invokeCount + TD_END);
-                    metrics.append(TD_BEGIN + invokeSuccCount + TD_END);
-                    metrics.append(TD_BEGIN + invokeFailCount + TD_END);
-                    metrics.append(TD_BEGIN + invokeFilterCount + TD_END);
-                    metrics.append(TD_BEGIN + invokeTimespan + TD_END);
-                    metrics.append(TD_BEGIN + invokeMaxTimespan + TD_END);
-                    metrics.append(TD_BEGIN + invokeMinTimespan + TD_END);
-                    metrics.append(TD_BEGIN + distribute + TD_END);
-                    metrics.append(TD_BEGIN + (lastErrorTime != null ? lastErrorTime : "") + TD_END);
-                    metrics.append(TD_BEGIN + lastStackTraceDetail + TD_END);
+                    metrics.append(TD_BEGIN).append(moduleName).append(TD_END);
+                    metrics.append(TD_BEGIN).append(methodName).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeCount).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeSuccCount).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeFailCount).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeFilterCount).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeTimespan).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeMaxTimespan).append(TD_END);
+                    metrics.append(TD_BEGIN).append(invokeMinTimespan).append(TD_END);
+                    metrics.append(TD_BEGIN).append(distribute).append(TD_END);
+                    metrics.append(TD_BEGIN).append(lastErrorTime != null ? lastErrorTime : "").append(TD_END);
+                    metrics.append(TD_BEGIN).append(lastStackTraceDetail).append(TD_END);
                     metrics.append(TR_END);
                 }
             }

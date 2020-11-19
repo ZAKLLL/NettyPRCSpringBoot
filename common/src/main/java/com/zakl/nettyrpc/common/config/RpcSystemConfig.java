@@ -38,8 +38,8 @@ public class RpcSystemConfig {
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
     public static final String DELIMITER = ":";
     public static final int IPADDR_OPRT_ARRAY_LENGTH = 2;
-    public static final String RPC_COMPILER_SPI_ATTR = "com.newlandframework.rpc.compiler.AccessAdaptive";
-    public static final String RPC_ABILITY_DETAIL_SPI_ATTR = "com.newlandframework.rpc.core.AbilityDetail";
+    public static final String RPC_COMPILER_SPI_ATTR = "com.zakl.nettyrpcserver.compiler.AccessAdaptive";
+    public static final String RPC_ABILITY_DETAIL_SPI_ATTR = "com.zakl.nettyrpcserver.core.AbilityDetail";
     public static final String FILTER_RESPONSE_MSG = "Illegal request,NettyRPC server refused to respond!";
     public static final String TIMEOUT_RESPONSE_MSG = "Timeout request,NettyRPC server request timeout!";
     public static final int SERIALIZE_POOL_MAX_TOTAL = 500;

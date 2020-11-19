@@ -21,9 +21,12 @@ import com.zakl.nettyrpc.common.model.MessageKeyVal;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.parallel.NamedThreadFactory;
-import com.zakl.nettyrpc.common.parallel.RpcThreadPool;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpcserver.compiler.AccessAdaptiveProvider;
+import com.zakl.nettyrpcserver.core.AbilityDetailProvider;
+import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsHandler;
 import com.zakl.nettyrpcserver.netty.resolver.ApiEchoResolver;
+import com.zakl.nettyrpcserver.parallel.RpcThreadPool;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -40,7 +43,7 @@ import java.util.concurrent.*;
 import java.util.logging.Level;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MessageRecvExecutor.java
  * @description:MessageRecvExecutor功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -49,6 +52,7 @@ import java.util.logging.Level;
 public class MessageRecvExecutor implements ApplicationContextAware {
 
     private String serverAddress;
+    private int serverPort;
     private int echoApiPort;
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
     private static final String DELIMITER = RpcSystemConfig.DELIMITER;
@@ -56,7 +60,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
     private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS;
     private static volatile ListeningExecutorService threadPoolExecutor;
-    private Map<String, Object> handlerMap = new ConcurrentHashMap<String, Object>();
+    private Map<String, Object> handlerMap = new ConcurrentHashMap<>();
     private int numberOfEchoThreadsPool = 1;
 
     ThreadFactory threadRpcFactory = new NamedThreadFactory("NettyRPC ThreadFactory");
@@ -91,6 +95,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
             public void onSuccess(Boolean result) {
                 ctx.writeAndFlush(response).addListener((ChannelFutureListener) channelFuture -> System.out.println("RPC Server Send message-id respone:" + request.getMessageId()));
             }
+
             @Override
             public void onFailure(Throwable t) {
                 t.printStackTrace();
@@ -101,7 +106,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         try {
-            MessageKeyVal keyVal = (MessageKeyVal) ctx.getBean(Class.forName("com.newlandframework.rpc.model.MessageKeyVal"));
+            MessageKeyVal keyVal = (MessageKeyVal) ctx.getBean(Class.forName("com.zakl.nettyrpc.common.model.MessageKeyVal"));
             Map<String, Object> rpcServiceObject = keyVal.getMessageKeyVal();
 
             Set s = rpcServiceObject.entrySet();
@@ -125,27 +130,22 @@ public class MessageRecvExecutor implements ApplicationContextAware {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            String[] ipAddr = serverAddress.split(MessageRecvExecutor.DELIMITER);
 
-            if (ipAddr.length == RpcSystemConfig.IPADDR_OPRT_ARRAY_LENGTH) {
-                final String host = ipAddr[0];
-                final int port = Integer.parseInt(ipAddr[1]);
-                ChannelFuture future;
-                future = bootstrap.bind(host, port).sync();
+            ChannelFuture future;
+            future = bootstrap.bind(serverAddress, serverPort).sync();
 
-                future.addListener((ChannelFutureListener) channelFuture -> {
-                    if (channelFuture.isSuccess()) {
-                        final ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
-                        ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
-                        completionService.submit(new ApiEchoResolver(host, echoApiPort));
-                        System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", host, port, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
-                        channelFuture.channel().closeFuture().sync().addListener((ChannelFutureListener) future1 -> executor.shutdownNow());
-                    }
+            if (future.isSuccess()) {
+                ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
+                future.addListener((ChannelFutureListener) future1 -> {
+                    ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
+                    completionService.submit(new ApiEchoResolver(serverAddress, echoApiPort));
+                    System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", serverAddress, serverPort, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
                 });
-            } else {
-                System.out.printf("[author tangjie] Netty RPC Server start fail!\n");
+                future.channel().closeFuture().sync().addListener(i -> executor.shutdown());
             }
+
         } catch (InterruptedException e) {
+            System.out.println("[author tangjie] Netty RPC Server start fail!");
             e.printStackTrace();
         }
     }
@@ -172,8 +172,9 @@ public class MessageRecvExecutor implements ApplicationContextAware {
         return serverAddress;
     }
 
-    public void setServerAddress(String serverAddress) {
+    public void setServerAddress(String serverAddress, int port) {
         this.serverAddress = serverAddress;
+        this.serverPort = port;
     }
 
     public RpcSerializeProtocol getSerializeProtocol() {

@@ -46,7 +46,7 @@ import static com.zakl.nettyrpcserver.netty.jmx.ThreadPoolMonitorProvider.DELIMI
  * @since 2017/10/12
  */
 public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
-    public final static String MBEAN_NAME = "com.newlandframework.rpc:type=ModuleMetricsHandler";
+    public final static String MBEAN_NAME = "com.zakl.nettyrpcserver.netty.jmx:type=ModuleMetricsHandler";
     public final static int MODULE_METRICS_JMX_PORT = 1098;
     private String moduleMetricsJmxUrl = "";
     private Semaphore semaphore = new Semaphore(0);

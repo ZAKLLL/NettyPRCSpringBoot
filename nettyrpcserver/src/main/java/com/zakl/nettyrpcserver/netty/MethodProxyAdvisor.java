@@ -15,9 +15,9 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
-import com.newlandframework.rpc.filter.Filter;
-import com.newlandframework.rpc.filter.ServiceFilterBinder;
-import com.newlandframework.rpc.model.MessageRequest;
+import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpcserver.filter.Filter;
+import com.zakl.nettyrpcserver.filter.ServiceFilterBinder;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,12 +28,13 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MethodProxyAdvisor.java
  * @description:MethodProxyAdvisor功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/7/27
  */
+//过滤器调用
 public class MethodProxyAdvisor implements MethodInterceptor {
     private Map<String, Object> handlerMap;
     private boolean returnNotNull = true;

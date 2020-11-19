@@ -15,21 +15,25 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
-import com.newlandframework.rpc.model.MessageRequest;
-import com.newlandframework.rpc.model.MessageResponse;
+import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpc.common.model.MessageResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MessageRecvHandler.java
  * @description:MessageRecvHandler功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+@Slf4j
 public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
 
     private final Map<String, Object> handlerMap;
@@ -45,6 +49,13 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
         RecvInitializeTaskFacade facade = new RecvInitializeTaskFacade(request, response, handlerMap);
         Callable<Boolean> recvTask = facade.getTask();
         MessageRecvExecutor.submit(recvTask, ctx, request, response);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "==>>>"
+                + "channelInactive");
+        super.channelInactive(ctx);
     }
 
     @Override

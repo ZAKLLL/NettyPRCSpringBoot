@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpc.common.parallel;
+package com.zakl.nettyrpcserver.parallel;
 
 
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
+import com.zakl.nettyrpc.common.parallel.BlockingQueueType;
+import com.zakl.nettyrpc.common.parallel.NamedThreadFactory;
 import com.zakl.nettyrpc.common.parallel.policy.*;
+import com.zakl.nettyrpcserver.netty.jmx.ThreadPoolMonitorProvider;
 
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ReflectionException;
+import java.io.IOException;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.*;
+
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -80,6 +90,30 @@ public class RpcThreadPool {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
                 createBlockingQueue(queues),
                 new NamedThreadFactory(name, true), createPolicy());
+        return executor;
+    }
+    public static Executor getExecutorWithJmx(int threads, int queues) {
+        final ThreadPoolExecutor executor = (ThreadPoolExecutor) getExecutor(threads, queues);
+        TIMER.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                ThreadPoolStatus status = new ThreadPoolStatus();
+                status.setPoolSize(executor.getPoolSize());
+                status.setActiveCount(executor.getActiveCount());
+                status.setCorePoolSize(executor.getCorePoolSize());
+                status.setMaximumPoolSize(executor.getMaximumPoolSize());
+                status.setLargestPoolSize(executor.getLargestPoolSize());
+                status.setTaskCount(executor.getTaskCount());
+                status.setCompletedTaskCount(executor.getCompletedTaskCount());
+
+                try {
+                    ThreadPoolMonitorProvider.monitor(status);
+                } catch (IOException | MalformedObjectNameException | ReflectionException | MBeanException | InstanceNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, monitorDelay, monitorDelay);
         return executor;
     }
 

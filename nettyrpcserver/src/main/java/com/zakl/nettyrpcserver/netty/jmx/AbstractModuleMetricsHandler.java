@@ -41,7 +41,7 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
     protected List<ModuleMetricsVisitor> visitorList = new CopyOnWriteArrayList<ModuleMetricsVisitor>();
     protected static String startTime;
     private final AtomicBoolean locked = new AtomicBoolean(false);
-    private final Queue<Thread> waiters = new ConcurrentLinkedQueue<Thread>();
+    private final Queue<Thread> waiters = new ConcurrentLinkedQueue<>();
     private static final int METRICS_VISITOR_LIST_SIZE = HashModuleMetricsVisitor.getInstance().getHashModuleMetricsVisitorListSize();
     private MetricsTask[] tasks = new MetricsTask[METRICS_VISITOR_LIST_SIZE];
     private boolean aggregationTaskFlag = false;

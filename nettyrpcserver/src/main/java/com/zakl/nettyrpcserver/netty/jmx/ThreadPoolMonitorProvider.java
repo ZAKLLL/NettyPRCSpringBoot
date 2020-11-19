@@ -16,6 +16,7 @@
 package com.zakl.nettyrpcserver.netty.jmx;
 
 import com.zakl.nettyrpcserver.netty.MessageRecvExecutor;
+import com.zakl.nettyrpcserver.parallel.ThreadPoolStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.*;
 import org.springframework.jmx.support.ConnectorServerFactoryBean;
@@ -81,7 +82,7 @@ public class ThreadPoolMonitorProvider {
         mBeanServerConnectionFactoryBean.setServiceUrl(url);
         mBeanServerConnectionFactoryBean.afterPropertiesSet();
         MBeanServerConnection connection = mBeanServerConnectionFactoryBean.getObject();
-        ObjectName objectName = new ObjectName("com.newlandframework.rpc.jmx:name=threadPoolStatus,type=ThreadPoolStatus");
+        ObjectName objectName = new ObjectName("com.zakl.nettyrpcserver.netty.jmx:name=threadPoolStatus,type=ThreadPoolStatus");
 
         connection.invoke(objectName, JMX_POOL_SIZE_METHOD, new Object[]{status.getPoolSize()}, new String[]{int.class.getName()});
         connection.invoke(objectName, JMX_ACTIVE_COUNT_METHOD, new Object[]{status.getActiveCount()}, new String[]{int.class.getName()});

@@ -15,7 +15,8 @@
  */
 package com.zakl.nettyrpcserver.netty.jmx;
 
-import com.newlandframework.rpc.server.event.AbstractInvokeEventBus;
+
+import com.zakl.nettyrpcserver.event.AbstractInvokeEventBus;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.JMException;
@@ -42,29 +43,29 @@ public class ModuleMetricsListener implements NotificationListener {
 
         switch (event) {
             case INVOKE_EVENT:
-                visitor.setInvokeCount(((Long) acn.getNewValue()).longValue());
+                visitor.setInvokeCount((Long) acn.getNewValue());
                 break;
             case INVOKE_SUCC_EVENT:
-                visitor.setInvokeSuccCount(((Long) acn.getNewValue()).longValue());
+                visitor.setInvokeSuccCount((Long) acn.getNewValue());
                 break;
             case INVOKE_FAIL_EVENT:
-                visitor.setInvokeFailCount(((Long) acn.getNewValue()).longValue());
+                visitor.setInvokeFailCount((Long) acn.getNewValue());
                 break;
             case INVOKE_FILTER_EVENT:
-                visitor.setInvokeFilterCount(((Long) acn.getNewValue()).longValue());
+                visitor.setInvokeFilterCount((Long) acn.getNewValue());
                 break;
             case INVOKE_TIMESPAN_EVENT:
-                visitor.setInvokeTimespan(((Long) acn.getNewValue()).longValue());
-                visitor.getHistogram().record(((Long) acn.getNewValue()).longValue());
+                visitor.setInvokeTimespan((Long) acn.getNewValue());
+                visitor.getHistogram().record((Long) acn.getNewValue());
                 break;
             case INVOKE_MAX_TIMESPAN_EVENT:
                 if ((Long) acn.getNewValue() > (Long) acn.getOldValue()) {
-                    visitor.setInvokeMaxTimespan(((Long) acn.getNewValue()).longValue());
+                    visitor.setInvokeMaxTimespan((Long) acn.getNewValue());
                 }
                 break;
             case INVOKE_MIN_TIMESPAN_EVENT:
                 if ((Long) acn.getNewValue() < (Long) acn.getOldValue()) {
-                    visitor.setInvokeMinTimespan(((Long) acn.getNewValue()).longValue());
+                    visitor.setInvokeMinTimespan((Long) acn.getNewValue());
                 }
                 break;
             case INVOKE_FAIL_STACKTRACE_EVENT:
