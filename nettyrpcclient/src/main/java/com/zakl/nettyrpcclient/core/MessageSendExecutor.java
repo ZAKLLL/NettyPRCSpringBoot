@@ -52,8 +52,8 @@ public class MessageSendExecutor {
         loader.unLoad();
     }
 
-    public <T> T execute(Class<T> rpcInterface) {
-        return Reflection.newProxy(rpcInterface, new MessageSendProxy<T>());
+    public <T> T execute(Class<T> rpcInterface, String remoteInterFaceName) {
+        return Reflection.newProxy(rpcInterface, new MessageSendProxy<T>(remoteInterFaceName));
     }
 }
 

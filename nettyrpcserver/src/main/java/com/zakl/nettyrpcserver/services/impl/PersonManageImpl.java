@@ -18,6 +18,7 @@ package com.zakl.nettyrpcserver.services.impl;
 
 import com.zakl.nettyrpcserver.pojo.Person;
 import com.zakl.nettyrpcserver.services.PersonManage;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/11/7
  */
+@Service(PersonManage.SERVICE_BEAN_NAME)
 public class PersonManageImpl implements PersonManage {
     @Override
     public int save(Person p) {

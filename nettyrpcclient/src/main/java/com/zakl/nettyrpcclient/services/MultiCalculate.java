@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.services;
+package com.zakl.nettyrpcclient.services;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -22,8 +22,8 @@ package com.zakl.nettyrpcserver.services;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public interface AddCalculate {
-    //两数相加
-    int add(int a, int b);
+public interface MultiCalculate {
+    //两数相乘
+    int multi(int a, int b);
 }
 

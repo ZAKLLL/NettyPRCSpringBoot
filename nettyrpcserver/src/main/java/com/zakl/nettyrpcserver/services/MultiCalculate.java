@@ -23,6 +23,7 @@ package com.zakl.nettyrpcserver.services;
  * @since 2016/10/7
  */
 public interface MultiCalculate {
+    String SERVICE_BEAN_NAME="multiCalculate";
     //两数相乘
     int multi(int a, int b);
 }

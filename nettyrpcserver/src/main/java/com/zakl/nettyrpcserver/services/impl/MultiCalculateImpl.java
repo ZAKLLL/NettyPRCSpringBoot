@@ -17,6 +17,7 @@ package com.zakl.nettyrpcserver.services.impl;
 
 
 import com.zakl.nettyrpcserver.services.MultiCalculate;
+import org.springframework.stereotype.Service;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -25,6 +26,7 @@ import com.zakl.nettyrpcserver.services.MultiCalculate;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+@Service(value = MultiCalculate.SERVICE_BEAN_NAME)
 public class MultiCalculateImpl implements MultiCalculate {
     //两数相乘
     @Override

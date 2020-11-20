@@ -17,6 +17,7 @@ package com.zakl.nettyrpcserver.services.impl;
 
 
 import com.zakl.nettyrpcserver.services.Store;
+import org.springframework.stereotype.Service;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -25,6 +26,7 @@ import com.zakl.nettyrpcserver.services.Store;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/7/28
  */
+@Service(Store.SERVICE_BEAN_NAME)
 public class StoreImpl implements Store {
     @Override
     public void save(String object) {

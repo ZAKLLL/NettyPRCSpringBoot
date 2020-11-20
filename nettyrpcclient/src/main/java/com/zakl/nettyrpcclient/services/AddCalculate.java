@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Newland Group Holding Limited
+ * Copyright (C) 2016 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.services;
+package com.zakl.nettyrpcclient.services;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:Store.java
- * @description:Store功能模块
+ * @filename:Calculate.java
+ * @description:Calculate功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/7/28
+ * @since 2016/10/7
  */
-public interface Store {
-    String SERVICE_BEAN_NAME="store";
-    void save(String object);
-
-    void save(int x);
+public interface AddCalculate {
+    //两数相加
+    int add(int a, int b);
 }
 

@@ -19,24 +19,34 @@ import com.google.common.reflect.AbstractInvocationHandler;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
 import com.zakl.nettyrpc.common.model.MessageCallBack;
 import com.zakl.nettyrpc.common.model.MessageRequest;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MessageSendProxy.java
  * @description:MessageSendProxy功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
 public class MessageSendProxy<T> extends AbstractInvocationHandler {
+    private String remoteInterFaceName;
+
+    public MessageSendProxy(String remoteInterFaceName) {
+        this.remoteInterFaceName = remoteInterFaceName;
+    }
+
+    public MessageSendProxy() {
+
+    }
 
     @Override
     public Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
         MessageRequest request = new MessageRequest();
         request.setMessageId(UUID.randomUUID().toString());
-        request.setClassName(method.getDeclaringClass().getName());
+        request.setClassName(StringUtils.isEmpty(remoteInterFaceName) ? method.getDeclaringClass().getName() : remoteInterFaceName);
         request.setMethodName(method.getName());
         request.setTypeParameters(method.getParameterTypes());
         request.setParametersVal(args);

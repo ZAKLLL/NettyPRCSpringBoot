@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Newland Group Holding Limited
+ * Copyright (C) 2016 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.services;
+package com.zakl.nettyrpcclient.services;
+
+
+import com.zakl.nettyrpcclient.pojo.Person;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:Store.java
- * @description:Store功能模块
+ * @filename:PersonManage.java
+ * @description:PersonManage功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/7/28
+ * @since 2016/11/7
  */
-public interface Store {
-    void save(String object);
+public interface PersonManage {
+    int save(Person p);
 
-    void save(int x);
+    void query(Person p);
+
+    void query(long timeout);
+
+    void check();
+
+    boolean checkAge(Person p);
 }
-

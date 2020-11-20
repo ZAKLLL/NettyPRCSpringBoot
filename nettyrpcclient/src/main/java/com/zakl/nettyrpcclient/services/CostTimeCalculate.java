@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.services;
+package com.zakl.nettyrpcclient.services;
+
+
+import com.zakl.nettyrpcclient.pojo.CostTime;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
- * @filename:Cache.java
- * @description:Cache功能模块
+ * @author tangjie<https: / / github.com / tang-jie>
+ * @filename:CostTimeCalculate.java
+ * @description:CostTimeCalculate功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2017/7/28
+ * @since 2017/3/22
  */
-public interface Cache {
+public interface CostTimeCalculate {
+    CostTime calculate();
 
-    void put(Object key, Object value);
-
-    Object get(Object key);
-
+    CostTime busy();
 }
 

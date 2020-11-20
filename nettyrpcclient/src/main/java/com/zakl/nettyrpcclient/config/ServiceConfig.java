@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -28,15 +27,21 @@ import java.util.List;
 @DependsOn(BeanUtils.BeanName)
 public class ServiceConfig {
 
-    private static String remoteServicePackageLocation;
+    private static String localServicePackage;
+    private static String remoteServicePackage;
     private static String remoteIpAddr;
     private static int remotePort;
     private static String protocol;
 
 
-    @Value(value = "${netty.rpc.server.remoteServicePackageLocation}")
-    public void setRemoteServicePackageLocation(String location) {
-        ServiceConfig.remoteServicePackageLocation = location;
+    @Value(value = "${netty.rpc.server.localServicePackage}")
+    public void setLocalServicePackage(String localServicePackage) {
+        ServiceConfig.localServicePackage = localServicePackage;
+    }
+
+    @Value(value = "${netty.rpc.server.remoteServicePackage}")
+    public void setRemoteServicePackage(String remoteServicePackage) {
+        ServiceConfig.remoteServicePackage = remoteServicePackage;
     }
 
     @Value(value = "${netty.rpc.server.ipAddr}")
@@ -60,11 +65,12 @@ public class ServiceConfig {
     public void init() {
         ApplicationContext ctx = BeanUtils.getApplicationContext();
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) ctx.getAutowireCapableBeanFactory();
-        List<String> remoteInterfaces = getRemoteInterfaces();
-        if (remoteInterfaces == null) return;
-        for (String name : remoteInterfaces) {
+        List<String> localInterfaces = getLocalInterfaces();
+        if (localInterfaces == null) return;
+        for (String name : localInterfaces) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NettyRpcReference.class);
-            beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", name);
+            beanDefinitionBuilder.addPropertyValue("localInterfaceName", name);
+            beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", remoteServicePackage + name.substring(name.lastIndexOf(".")));
             beanDefinitionBuilder.addPropertyValue("ipAddr", remoteIpAddr);
             beanDefinitionBuilder.addPropertyValue("port", remotePort);
             beanDefinitionBuilder.addPropertyValue("protocol", RpcSerializeProtocol.valueOf(protocol));
@@ -73,9 +79,9 @@ public class ServiceConfig {
     }
 
     //获取对应的远程调用接口
-    private static List<String> getRemoteInterfaces() {
+    private static List<String> getLocalInterfaces() {
         try {
-            return getClassName(remoteServicePackageLocation, true);
+            return getClassName(localServicePackage, true);
         } catch (IOException e) {
             e.printStackTrace();
         }

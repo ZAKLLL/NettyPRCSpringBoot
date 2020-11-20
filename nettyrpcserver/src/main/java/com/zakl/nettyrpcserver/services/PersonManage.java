@@ -19,13 +19,15 @@ package com.zakl.nettyrpcserver.services;
 import com.zakl.nettyrpcserver.pojo.Person;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:PersonManage.java
  * @description:PersonManage功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/11/7
  */
 public interface PersonManage {
+    String SERVICE_BEAN_NAME = "personManage";
+
     int save(Person p);
 
     void query(Person p);

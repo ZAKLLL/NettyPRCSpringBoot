@@ -1,8 +1,7 @@
 package com.zakl.nettyrpcclient.controller;
 
-import com.zakl.nettyrpcserver.pojo.CostTime;
-import com.zakl.nettyrpcserver.services.AddCalculate;
-import com.zakl.nettyrpcserver.services.CostTimeCalculate;
+import com.zakl.nettyrpcclient.services.AddCalculate;
+import com.zakl.nettyrpcclient.services.CostTimeCalculate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

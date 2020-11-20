@@ -36,6 +36,7 @@ import javax.annotation.PostConstruct;
 public class NettyRpcReference implements FactoryBean, DisposableBean {
 
 
+    private String localInterfaceName;
     private String remoteInterfaceName;
     private String ipAddr;
     private int port;
@@ -59,17 +60,17 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     @Override
     public Object getObject() {
-        return MessageSendExecutor.getInstance().execute(getObjectType());
+        return MessageSendExecutor.getInstance().execute(getObjectType(), remoteInterfaceName);
     }
 
     @Override
     public Class<?> getObjectType() {
-        if (remoteInterfaceName == null) {
+        if (localInterfaceName == null) {
             //该bean参数尚未注入,不适合提前加载。
             return null;
         }
         try {
-            return this.getClass().getClassLoader().loadClass(remoteInterfaceName);
+            return this.getClass().getClassLoader().loadClass(localInterfaceName);
         } catch (ClassNotFoundException e) {
             System.err.println("spring analyze fail!");
         }
@@ -79,6 +80,14 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
     @Override
     public boolean isSingleton() {
         return true;
+    }
+
+    public String getLocalInterfaceName() {
+        return localInterfaceName;
+    }
+
+    public void setLocalInterfaceName(String localInterfaceName) {
+        this.localInterfaceName = localInterfaceName;
     }
 
     public String getRemoteInterfaceName() {
