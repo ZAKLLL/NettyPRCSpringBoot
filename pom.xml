@@ -22,6 +22,7 @@
         <module>./nettyrpcclient</module>
         <module>./nettyrpcserver</module>
         <module>./common</module>
+        <module>./log</module>
     </modules>
 
 </project>

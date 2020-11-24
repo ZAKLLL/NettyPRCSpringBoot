@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcclient.services;
 
 
-import com.zakl.nettyrpcclient.pojo.CostTime;
+import com.zakl.nettyrpcserver.pojo.CostTime;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>

@@ -139,12 +139,12 @@ public class MessageRecvExecutor implements ApplicationContextAware {
                 future.addListener((ChannelFutureListener) future1 -> {
                     ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
                     completionService.submit(new ApiEchoResolver(serverAddress, echoApiPort));
-                    System.out.printf("[author tangjie] Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", serverAddress, serverPort, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
+                    System.out.printf("Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", serverAddress, serverPort, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
                 });
                 future.channel().closeFuture().sync().addListener(i -> executor.shutdown());
             }
         } catch (InterruptedException e) {
-            System.out.println("[author tangjie] Netty RPC Server start fail!");
+            System.out.println("Netty RPC Server start fail!");
             e.printStackTrace();
         }
     }

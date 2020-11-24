@@ -13,10 +13,11 @@
     <artifactId>nettyrpcserver</artifactId>
     <version>1.0</version>
     <name>nettyrpcserver</name>
-    <description>NettyRpcServer Base On SprintBoot</description>
+    <description>NettyRPC 服务端</description>
 
     <properties>
         <java.version>1.8</java.version>
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
@@ -25,11 +26,20 @@
             <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.zakl.nettyprcspringboot</groupId>-->
+        <!--            <artifactId>log</artifactId>-->
+        <!--            <version>1.0</version>-->
+        <!--        </dependency>-->
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.0.9</version>
         </dependency>
+
+        <!--动态生成字节码-->
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
