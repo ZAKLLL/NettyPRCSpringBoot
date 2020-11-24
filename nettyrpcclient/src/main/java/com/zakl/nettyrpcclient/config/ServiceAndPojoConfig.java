@@ -13,9 +13,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author ZhangJiaKui
@@ -25,38 +23,50 @@ import java.util.List;
  */
 @Component
 @DependsOn(BeanUtils.BeanName)
-public class ServiceConfig {
+public class ServiceAndPojoConfig {
 
     private static String localServicePackage;
     private static String remoteServicePackage;
     private static String remoteIpAddr;
     private static int remotePort;
     private static String protocol;
+    private static String pojoMapping;
+
+    //pojo 本地全限定名->远程全限定名
+    public static Map<String, String> localToRemotePojoMap;
+
+    //pojo 远程全限定名->本地全限定名
+    public static Map<String, String> remoteToLocalPojoMap;
 
 
     @Value(value = "${netty.rpc.server.localServicePackage}")
     public void setLocalServicePackage(String localServicePackage) {
-        ServiceConfig.localServicePackage = localServicePackage;
+        ServiceAndPojoConfig.localServicePackage = localServicePackage;
     }
 
     @Value(value = "${netty.rpc.server.remoteServicePackage}")
     public void setRemoteServicePackage(String remoteServicePackage) {
-        ServiceConfig.remoteServicePackage = remoteServicePackage;
+        ServiceAndPojoConfig.remoteServicePackage = remoteServicePackage;
     }
 
     @Value(value = "${netty.rpc.server.ipAddr}")
     public void setRemoteIpAddr(String ipAddr) {
-        ServiceConfig.remoteIpAddr = ipAddr;
+        ServiceAndPojoConfig.remoteIpAddr = ipAddr;
     }
 
     @Value(value = "${netty.rpc.server.port}")
     public void setRemotePort(int remotePort) {
-        ServiceConfig.remotePort = remotePort;
+        ServiceAndPojoConfig.remotePort = remotePort;
     }
 
     @Value(value = "${netty.rpc.server.protocol}")
     public void setProtocol(String protooal) {
-        ServiceConfig.protocol = protooal;
+        ServiceAndPojoConfig.protocol = protooal;
+    }
+
+    @Value(value = "${netty.rpc.server.pojoMapping}")
+    public void setPojoMapping(String pojoMapping) {
+        ServiceAndPojoConfig.pojoMapping = pojoMapping;
     }
 
 
@@ -70,18 +80,40 @@ public class ServiceConfig {
         for (String name : localInterfaces) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NettyRpcReference.class);
             beanDefinitionBuilder.addPropertyValue("localInterfaceName", name);
-            beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", remoteServicePackage + name.substring(name.lastIndexOf(".")));
+            beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", name.replace(localServicePackage, remoteServicePackage));
             beanDefinitionBuilder.addPropertyValue("ipAddr", remoteIpAddr);
             beanDefinitionBuilder.addPropertyValue("port", remotePort);
             beanDefinitionBuilder.addPropertyValue("protocol", RpcSerializeProtocol.valueOf(protocol));
             defaultListableBeanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
+        }
+
+        String[] split = pojoMapping.split(",");
+        localToRemotePojoMap = new HashMap<>();
+        remoteToLocalPojoMap = new HashMap<>();
+        for (String s : split) {
+            s = s.trim();
+            if (s.length() > 2) {
+                String[] packages = s.split(":");
+                String localPojoPackage = packages[0];
+                String remotePojoPackage = packages[1];
+                try {
+                    List<String> classNames = getClassNames(localPojoPackage, true);
+                    for (String className : classNames) {
+                        String remotePojoName = className.replace(localPojoPackage, remotePojoPackage);
+                        localToRemotePojoMap.put(className, remotePojoName);
+                        remoteToLocalPojoMap.put(remotePojoName, className);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     //获取对应的远程调用接口
     private static List<String> getLocalInterfaces() {
         try {
-            return getClassName(localServicePackage, true);
+            return getClassNames(localServicePackage, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,7 +121,7 @@ public class ServiceConfig {
     }
 
 
-    private static List<String> getClassName(String packageName, boolean childPackage) throws IOException {
+    private static List<String> getClassNames(String packageName, boolean childPackage) throws IOException {
         List<String> fileNames = new ArrayList<>();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         String packagePath = packageName.replace(".", "/");
@@ -122,5 +154,13 @@ public class ServiceConfig {
             }
         }
         return serviceLocationList;
+    }
+
+    public static String getLocalPojo(String responsePojoName) {
+        return remoteToLocalPojoMap.getOrDefault(responsePojoName, responsePojoName);
+    }
+
+    public static String getRemotePojo(String localPojoName) {
+        return localToRemotePojoMap.getOrDefault(localPojoName, localPojoName);
     }
 }

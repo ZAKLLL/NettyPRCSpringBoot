@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:ReflectionUtils.java
  * @description:ReflectionUtils功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -267,8 +267,8 @@ public class ReflectionUtils {
         }
     }
 
-    public static Method getDeclaredMethod(Class<?> cls, String methodName, Class<?>... parameterTypes) {
-        Method method = null;
+    public static Method getDeclaredMethod(Class<?> cls, String methodName, String[] parameterTypes) throws NoSuchMethodException {
+        Method method;
         Class<?> searchType = cls;
         while (searchType != null) {
             method = findDeclaredMethod(searchType, methodName, parameterTypes);
@@ -277,36 +277,37 @@ public class ReflectionUtils {
             }
             searchType = searchType.getSuperclass();
         }
-        return method;
+        return null;
     }
 
-    public static Method findDeclaredMethod(final Class<?> cls, final String methodName, final Class<?>... parameterTypes) {
+    public static Method findDeclaredMethod(final Class<?> cls, final String methodName, final String[] parameterTypes) throws NoSuchMethodException {
         Method method = null;
-        try {
-            method = cls.getDeclaredMethod(methodName, parameterTypes);
-            return method;
-        } catch (NoSuchMethodException e) {
-            if (method == null) {
-                for (Method m : cls.getDeclaredMethods()) {
-                    if (m.getName().equals(methodName)) {
-                        boolean find = true;
-                        Class[] paramType = m.getParameterTypes();
-                        if (paramType.length != parameterTypes.length) {
-                            continue;
-                        }
-                        for (int i = 0; i < parameterTypes.length; i++) {
-                            if (!paramType[i].isAssignableFrom(parameterTypes[i])) {
-                                find = false;
-                                break;
-                            }
-                        }
-                        if (find) {
-                            method = m;
-                            break;
-                        }
+        //指定以String 的方式获取参数的Type
+//        try {
+//            method = cls.getDeclaredMethod(methodName, parameterTypes);
+//            return method;
+//        } catch (NoSuchMethodException e) {
+        for (Method m : cls.getDeclaredMethods()) {
+            if (m.getName().equals(methodName)) {
+                boolean find = true;
+                Class[] paramType = m.getParameterTypes();
+                if (paramType.length != parameterTypes.length) {
+                    continue;
+                }
+                for (int i = 0; i < parameterTypes.length; i++) {
+                    if (!paramType[i].getCanonicalName().equals(parameterTypes[i])) {
+                        find = false;
+                        break;
                     }
                 }
+                if (find) {
+                    method = m;
+                    break;
+                }
             }
+        }
+        if (method == null) {
+            throw new NoSuchMethodException(methodName);
         }
         return method;
     }

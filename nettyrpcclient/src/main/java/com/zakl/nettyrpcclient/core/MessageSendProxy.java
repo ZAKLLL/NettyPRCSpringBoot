@@ -15,9 +15,10 @@
  */
 package com.zakl.nettyrpcclient.core;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.reflect.AbstractInvocationHandler;
+import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
-import com.zakl.nettyrpc.common.model.MessageCallBack;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,8 +49,18 @@ public class MessageSendProxy<T> extends AbstractInvocationHandler {
         request.setMessageId(UUID.randomUUID().toString());
         request.setClassName(StringUtils.isEmpty(remoteInterFaceName) ? method.getDeclaringClass().getName() : remoteInterFaceName);
         request.setMethodName(method.getName());
-        request.setTypeParameters(method.getParameterTypes());
-        request.setParametersVal(args);
+        //将参数类型以全限定名的String传入
+        String[] typeParameters = new String[method.getParameterTypes().length];
+        request.setTypeParameters(typeParameters);
+        for (int i = 0; i < typeParameters.length; i++) {
+            typeParameters[i] = ServiceAndPojoConfig.getRemotePojo(method.getParameterTypes()[i].getCanonicalName());
+        }
+        //将参数值以json的格式传入
+        String[] parametersValInJson = new String[args.length];
+        request.setParametersVal(parametersValInJson);
+        for (int i = 0; i < parametersValInJson.length; i++) {
+            parametersValInJson[i] = JSON.toJSON(args[i]).toString();
+        }
 
         MessageSendHandler handler = RpcServerLoader.getInstance().getMessageSendHandler();
         MessageCallBack callBack = handler.sendRequest(request);

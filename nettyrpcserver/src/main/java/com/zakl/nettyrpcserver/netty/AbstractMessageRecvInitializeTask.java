@@ -15,6 +15,8 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
@@ -31,7 +33,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:AbstractMessageRecvInitializeTask.java
  * @description:AbstractMessageRecvInitializeTask功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -61,13 +63,16 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
             Object result = reflect(request);
             boolean isInvokeSucc = (!returnNotNull || result != null);
             if (isInvokeSucc) {
-                response.setResult(result);
+                //todo 添加json返回
+                response.setResponseType(result.getClass().getCanonicalName());
+                response.setJsonResult(JSON.toJSON(result).toString());
                 response.setError("");
                 response.setReturnNotNull(returnNotNull);
                 injectSuccInvoke(invokeTimespan);
             } else {
                 System.err.println(RpcSystemConfig.FILTER_RESPONSE_MSG);
-                response.setResult(null);
+                response.setJsonResult(null);
+                response.setResponseType(null);
                 response.setError(RpcSystemConfig.FILTER_RESPONSE_MSG);
                 injectFilterInvoke();
             }
@@ -149,7 +154,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         this.request = request;
     }
 
-    protected abstract void injectInvoke();
+    protected abstract void injectInvoke() throws NoSuchMethodException;
 
     protected abstract void injectSuccInvoke(long invokeTimespan);
 

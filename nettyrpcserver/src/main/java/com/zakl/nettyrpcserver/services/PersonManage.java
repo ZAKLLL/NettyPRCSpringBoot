@@ -32,6 +32,9 @@ public interface PersonManage {
 
     void query(Person p);
 
+    Person queryP(Person p,int a);
+
+
     void query(long timeout);
 
     void check();

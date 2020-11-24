@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcclient.services;
 
 
-import com.zakl.nettyrpcserver.pojo.Person;
+import com.zakl.nettyrpcclient.pojo.Person;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -29,6 +29,8 @@ public interface PersonManage {
     int save(Person p);
 
     void query(Person p);
+
+    Person queryP(Person p,int a);
 
     void query(long timeout);
 

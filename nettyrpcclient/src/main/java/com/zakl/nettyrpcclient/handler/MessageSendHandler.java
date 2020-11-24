@@ -15,7 +15,7 @@
  */
 package com.zakl.nettyrpcclient.handler;
 
-import com.zakl.nettyrpc.common.model.MessageCallBack;
+import com.zakl.nettyrpcclient.core.MessageCallBack;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import io.netty.buffer.Unpooled;

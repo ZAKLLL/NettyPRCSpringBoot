@@ -80,7 +80,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
         return MessageRecvExecutorHolder.INSTANCE;
     }
 
-    public static void submit(Callable<Boolean> task, final ChannelHandlerContext ctx, final MessageRequest request, final MessageResponse response) {
+    public static void submit(Callable<Boolean> recvTask, final ChannelHandlerContext ctx, final MessageRequest request, final MessageResponse response) {
         if (threadPoolExecutor == null) {
             synchronized (MessageRecvExecutor.class) {
                 if (threadPoolExecutor == null) {
@@ -89,7 +89,7 @@ public class MessageRecvExecutor implements ApplicationContextAware {
             }
         }
 
-        ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(task);
+        ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(recvTask);
         Futures.addCallback(listenableFuture, new FutureCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {

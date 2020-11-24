@@ -20,10 +20,11 @@ import com.zakl.nettyrpcserver.pojo.Person;
 import com.zakl.nettyrpcserver.services.PersonManage;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:PersonManageImpl.java
  * @description:PersonManageImpl功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -38,6 +39,7 @@ public class PersonManageImpl implements PersonManage {
         return 0;
     }
 
+
     @Override
     public void query(Person p) {
         //your business logic code here!
@@ -47,6 +49,13 @@ public class PersonManageImpl implements PersonManage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Person queryP(Person p, int a) {
+        System.out.println("server receive" + p.toString()+"-------"+a);
+        p.setBirthday(new Date());
+        return p;
     }
 
     @Override

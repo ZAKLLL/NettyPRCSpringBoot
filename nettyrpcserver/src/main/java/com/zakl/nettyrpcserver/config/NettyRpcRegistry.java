@@ -73,7 +73,6 @@ public class NettyRpcRegistry implements DisposableBean {
     @PostConstruct
     public void init() {
 
-        System.out.println(serviceConfig);
         MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
         ref.setServerAddress(ipAddr, port);
         ref.setEchoApiPort(Integer.parseInt(echoApiPort));

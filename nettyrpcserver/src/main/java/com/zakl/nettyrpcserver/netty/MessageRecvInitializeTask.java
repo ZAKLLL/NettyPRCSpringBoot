@@ -46,7 +46,7 @@ public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask
     }
 
     @Override
-    protected void injectInvoke() {
+    protected void injectInvoke() throws NoSuchMethodException {
         Class cls = handlerMap.get(request.getClassName()).getClass();
         boolean binder = ServiceFilterBinder.class.isAssignableFrom(cls);
         if (binder) {

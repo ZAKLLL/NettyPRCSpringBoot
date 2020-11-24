@@ -15,12 +15,17 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
+import com.alibaba.fastjson.JSON;
 import com.zakl.nettyrpc.common.model.MessageRequest;
+import netscape.javascript.JSUtil;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MethodInvoker.java
  * @description:MethodInvoker功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -38,12 +43,30 @@ public class MethodInvoker {
         this.serviceBean = serviceBean;
     }
 
+    private final static Map<String, String> unBoxTypeMap;
+
+    static {
+        unBoxTypeMap = new HashMap<>();
+        unBoxTypeMap.put("int", "java.lang.Integer");
+        unBoxTypeMap.put("byte", "java.lang.Byte");
+        unBoxTypeMap.put("short", "java.lang.Short");
+        unBoxTypeMap.put("long", "java.lang.Long");
+        unBoxTypeMap.put("double", "java.lang.Double");
+        unBoxTypeMap.put("float", "java.lang.Float");
+        unBoxTypeMap.put("bool", "java.lang.Boolean");
+    }
+
     public Object invoke(MessageRequest request) throws Throwable {
         String methodName = request.getMethodName();
-        Object[] parameters = request.getParametersVal();
+        String[] parameters = request.getParametersVal();
+        String[] typeParameters = request.getTypeParameters();
+        Object[] args = new Object[parameters.length];
+        for (int i = 0; i < args.length; i++) {
+            args[i] = JSON.parseObject(parameters[i], this.getClass().getClassLoader().loadClass(unBoxTypeMap.getOrDefault(typeParameters[i], typeParameters[i])));
+        }
         sw.reset();
         sw.start();
-        Object result = MethodUtils.invokeMethod(serviceBean, methodName, parameters);
+        Object result = MethodUtils.invokeMethod(serviceBean, methodName, args);
         sw.stop();
         return result;
     }

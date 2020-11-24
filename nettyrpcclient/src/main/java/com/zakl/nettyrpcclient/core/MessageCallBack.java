@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.core;
+package com.zakl.nettyrpcclient.core;
 
 
+import com.alibaba.fastjson.JSON;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.exception.InvokeModuleException;
 import com.zakl.nettyrpc.common.exception.InvokeTimeoutException;
 import com.zakl.nettyrpc.common.exception.RejectResponeException;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
+import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -29,7 +31,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MessageCallBack.java
  * @description:MessageCallBack功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -54,7 +56,9 @@ public class MessageCallBack {
                 boolean isInvokeSucc = getInvokeResult();
                 if (isInvokeSucc) {
                     if (this.response.getError().isEmpty()) {
-                        return this.response.getResult();
+                        String localPojoName = ServiceAndPojoConfig.getLocalPojo(this.response.getResponseType());
+                        String jsonResult = this.response.getJsonResult();
+                        return JSON.parseObject(jsonResult, this.getClass().getClassLoader().loadClass(localPojoName));
                     } else {
                         throw new InvokeModuleException(this.response.getError());
                     }
@@ -64,6 +68,9 @@ public class MessageCallBack {
             } else {
                 return null;
             }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
         } finally {
             lock.unlock();
         }
@@ -93,6 +100,6 @@ public class MessageCallBack {
 
     private boolean getInvokeResult() {
         return (!this.response.getError().equals(RpcSystemConfig.FILTER_RESPONSE_MSG) &&
-                (!this.response.isReturnNotNull() || (this.response.isReturnNotNull() && this.response.getResult() != null)));
+                (!this.response.isReturnNotNull() || (this.response.isReturnNotNull() && this.response.getResponseType() != null && this.response.getJsonResult() != null)));
     }
 }

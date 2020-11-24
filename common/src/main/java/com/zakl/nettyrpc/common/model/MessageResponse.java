@@ -15,55 +15,29 @@
  */
 package com.zakl.nettyrpc.common.model;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:MessageResponse.java
  * @description:MessageResponse功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+@Data
 public class MessageResponse implements Serializable {
 
     private String messageId;
     private String error;
+    private String responseType;
+
+    private String jsonResult;
     private Object result;
     private boolean returnNotNull;
 
-    public boolean isReturnNotNull() {
-        return returnNotNull;
-    }
-
-    public void setReturnNotNull(boolean returnNotNull) {
-        this.returnNotNull = returnNotNull;
-    }
-
-    public String getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public Object getResult() {
-        return result;
-    }
-
-    public void setResult(Object result) {
-        this.result = result;
-    }
 
     @Override
     public String toString() {
