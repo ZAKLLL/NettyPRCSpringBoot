@@ -18,7 +18,7 @@ package com.zakl.nettyrpcserver.filter;
 import java.lang.reflect.Method;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:Filter.java
  * @description:Filter功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
  */
 public interface Filter {
     // TODO: 2017/7/27 by tangjie
+    //todo: 实现具体的过滤器方法
     // If returns false, indicates that the RPC request method is intercept.
     boolean before(Method method, Object processor, Object[] requestObjects);
 

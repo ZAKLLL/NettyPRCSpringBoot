@@ -33,7 +33,6 @@ public class MessageResponse implements Serializable {
     private String messageId;
     private String error;
     private String responseType;
-
     private String jsonResult;
     private Object result;
     private boolean returnNotNull;

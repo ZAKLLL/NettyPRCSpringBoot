@@ -56,7 +56,7 @@ public class MessageRecvInitializeTask extends AbstractMessageRecvInitializeTask
         ReflectionUtils utils = new ReflectionUtils();
 
         try {
-            Method method = ReflectionUtils.getDeclaredMethod(cls, request.getMethodName(), request.getTypeParameters());
+            Method method = ReflectionUtils.getDeclaredMethod(cls, request.getMethodName(), request.getParameterTypes());
             utils.listMethod(method, false);
             String signatureMethod = utils.getProvider().toString();
             visitor.set(ModuleMetricsHandler.getInstance().visit(request.getClassName(), signatureMethod));

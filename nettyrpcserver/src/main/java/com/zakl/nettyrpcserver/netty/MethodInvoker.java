@@ -15,9 +15,8 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
-import com.alibaba.fastjson.JSON;
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import netscape.javascript.JSUtil;
+import com.zakl.nettyrpc.common.util.JsonUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -59,11 +58,12 @@ public class MethodInvoker {
     public Object invoke(MessageRequest request) throws Throwable {
         String methodName = request.getMethodName();
         String[] parameters = request.getParametersVal();
-        String[] typeParameters = request.getTypeParameters();
-        Object[] args = new Object[parameters.length];
-        for (int i = 0; i < args.length; i++) {
-            args[i] = JSON.parseObject(parameters[i], this.getClass().getClassLoader().loadClass(unBoxTypeMap.getOrDefault(typeParameters[i], typeParameters[i])));
-        }
+        String[] typeParameters = request.getParameterTypes();
+//        Object[] args = new Object[parameters.length];
+//        for (int i = 0; i < args.length; i++) {
+//            args[i] = JSON.parseObject(parameters[i], this.getClass().getClassLoader().loadClass(unBoxTypeMap.getOrDefault(typeParameters[i], typeParameters[i])));
+//        }
+        Object[] args = JsonUtils.jsonsToObjects(parameters, typeParameters);
         sw.reset();
         sw.start();
         Object result = MethodUtils.invokeMethod(serviceBean, methodName, args);

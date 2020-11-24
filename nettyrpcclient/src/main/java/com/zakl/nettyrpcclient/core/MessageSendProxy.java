@@ -51,7 +51,7 @@ public class MessageSendProxy<T> extends AbstractInvocationHandler {
         request.setMethodName(method.getName());
         //将参数类型以全限定名的String传入
         String[] typeParameters = new String[method.getParameterTypes().length];
-        request.setTypeParameters(typeParameters);
+        request.setParameterTypes(typeParameters);
         for (int i = 0; i < typeParameters.length; i++) {
             typeParameters[i] = ServiceAndPojoConfig.getRemotePojo(method.getParameterTypes()[i].getCanonicalName());
         }

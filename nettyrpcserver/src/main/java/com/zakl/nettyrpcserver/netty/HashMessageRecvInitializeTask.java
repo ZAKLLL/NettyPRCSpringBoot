@@ -60,7 +60,7 @@ public class HashMessageRecvInitializeTask extends AbstractMessageRecvInitialize
         ReflectionUtils utils = new ReflectionUtils();
 
         try {
-            Method method = ReflectionUtils.getDeclaredMethod(cls, request.getMethodName(), request.getTypeParameters());
+            Method method = ReflectionUtils.getDeclaredMethod(cls, request.getMethodName(), request.getParameterTypes());
             utils.listMethod(method, false);
             String signatureMethod = utils.getProvider().toString().trim();
             int index = getHashVisitorListIndex(signatureMethod);

@@ -34,9 +34,11 @@ public class MessageRequest implements Serializable {
     private String className;
     private String methodName;
     //    private Class<?>[] typeParameters;
-    private String[] typeParameters;
+    //String 表示的TypeK
+    private String[] parameterTypes;
 
-//        private Object[] parametersVal;
+    //        private Object[] parametersVal;
+    //json 字符串
     private String[] parametersVal;
 
     private boolean invokeMetrics = true;

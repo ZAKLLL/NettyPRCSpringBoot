@@ -16,15 +16,16 @@
 package com.zakl.nettyrpcserver.netty;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpc.common.util.JsonUtils;
 import com.zakl.nettyrpcserver.filter.Filter;
 import com.zakl.nettyrpcserver.filter.ServiceFilterBinder;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -51,6 +52,20 @@ public class MethodProxyAdvisor implements MethodInterceptor {
         this.handlerMap = handlerMap;
     }
 
+    private final static Map<String, String> unBoxTypeMap;
+
+    static {
+        unBoxTypeMap = new HashMap<>();
+        unBoxTypeMap.put("int", "java.lang.Integer");
+        unBoxTypeMap.put("byte", "java.lang.Byte");
+        unBoxTypeMap.put("short", "java.lang.Short");
+        unBoxTypeMap.put("long", "java.lang.Long");
+        unBoxTypeMap.put("double", "java.lang.Double");
+        unBoxTypeMap.put("float", "java.lang.Float");
+        unBoxTypeMap.put("bool", "java.lang.Boolean");
+    }
+
+
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Object[] params = invocation.getArguments();
@@ -63,24 +78,24 @@ public class MethodProxyAdvisor implements MethodInterceptor {
         String className = request.getClassName();
         Object serviceBean = handlerMap.get(className);
         String methodName = request.getMethodName();
-        Object[] parameters = request.getParametersVal();
+        String[] parametersInJson = request.getParametersVal();
+        String[] parameterTypesInString = request.getParameterTypes();
 
         boolean existFilter = ServiceFilterBinder.class.isAssignableFrom(serviceBean.getClass());
         ((MethodInvoker) invocation.getThis()).setServiceBean(existFilter ? ((ServiceFilterBinder) serviceBean).getObject() : serviceBean);
 
-        //todo 暂时锁定不过滤
-        existFilter = false;
 
         if (existFilter) {
             ServiceFilterBinder processors = (ServiceFilterBinder) serviceBean;
             if (processors.getFilter() != null) {
                 Filter filter = processors.getFilter();
-                Object[] args = ArrayUtils.nullToEmpty(parameters);
+                //todo 测试Utils
+                Object[] args = JsonUtils.jsonsToObjects(parametersInJson, parameterTypesInString);
                 Class<?>[] parameterTypes = ClassUtils.toClass(args);
                 Method method = MethodUtils.getMatchingAccessibleMethod(processors.getObject().getClass(), methodName, parameterTypes);
-                if (filter.before(method, processors.getObject(), parameters)) {
+                if (filter.before(method, processors.getObject(), parametersInJson)) {
                     Object result = invocation.proceed();
-                    filter.after(method, processors.getObject(), parameters);
+                    filter.after(method, processors.getObject(), parametersInJson);
                     setReturnNotNull(result != null);
                     return result;
                 } else {
