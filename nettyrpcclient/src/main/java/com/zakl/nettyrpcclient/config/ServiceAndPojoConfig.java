@@ -28,7 +28,7 @@ public class ServiceAndPojoConfig {
     private static String localServicePackage;
     private static String remoteServicePackage;
     private static String remoteIpAddr;
-    private static int remotePort;
+    private static Integer remotePort;
     private static String protocol;
     private static String pojoMapping;
 
@@ -141,6 +141,9 @@ public class ServiceAndPojoConfig {
     private static List<String> getAllClassNameByFile(File file, boolean flag, String packageName) {
         List<String> serviceLocationList = new ArrayList<>();
         File[] files = file.listFiles();
+        if (files == null) {
+            return serviceLocationList;
+        }
         for (File f : files) {
             if (f.isFile()) {
                 String path = f.getAbsolutePath();

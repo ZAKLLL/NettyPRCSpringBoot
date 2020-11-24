@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Enumeration;
 
-//
 
 @Component
 @Aspect
@@ -52,9 +51,9 @@ public class LogAspect {
 
         // 获取request
         HttpServletRequest req = getRequest();
-        String requestIp = "";
-        String requestUrl = "";
-        String requestType = "";
+        String requestIp;
+        String requestUrl;
+        String requestType;
         if (req != null) {
             addOperationLog(joinPoint, args, diffTime, LogItemNames.LogType.GLOBAL);
             requestIp = req.getRemoteAddr();
@@ -148,9 +147,6 @@ public class LogAspect {
      */
     private HttpServletRequest getRequest() {
         if (RequestContextHolder.getRequestAttributes() != null) {
-            HttpRequest request;
-
-
             return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         }
         return null;

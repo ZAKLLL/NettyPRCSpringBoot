@@ -13,12 +13,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-/**
- * The type Log utils.
- *
- * @author thz
- * @since 2020 /4/26
- */
 public class LogUtils {
     /**
      * 空数组

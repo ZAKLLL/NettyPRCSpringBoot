@@ -36,27 +36,27 @@ public class OutputLogParameter {
     public static String printFields(Object o, String name, int ilay) {
         String result = "";
         Object value = null;
-        Class<?> cls = (Class<?>)o.getClass();
+        Class<?> cls = (Class<?>) o.getClass();
         if (cls != null) {
             try {
                 // 基本类型（int, double, float, long, short, boolean, byte,
                 // char，void）
                 try {
-                    if (((Class<?>)cls.getField("TYPE").get(null)).isPrimitive()) {
+                    if (((Class<?>) cls.getField("TYPE").get(null)).isPrimitive()) {
                         return formatField(name, o, cls);
                     }
-                } catch (Exception e1) {
+                } catch (Exception ignored) {
                 }
                 // string,Integer,BigInteger,BigDecimal,Date,UUID
                 if (cls == String.class || cls == Integer.class || cls == Long.class || cls == Short.class
-                    || cls == Double.class || cls == Float.class || cls == Boolean.class || cls == Byte.class
-                    || cls == Character.class || cls == BigInteger.class || cls == BigDecimal.class || cls == Date.class
-                    || cls == UUID.class) {
+                        || cls == Double.class || cls == Float.class || cls == Boolean.class || cls == Byte.class
+                        || cls == Character.class || cls == BigInteger.class || cls == BigDecimal.class || cls == Date.class
+                        || cls == UUID.class) {
                     return formatField(name, o, cls);
-                    
+
                 }
                 // Calendar
-                if (cls == Calendar.class || cls == GregorianCalendar.class) {
+                if (cls == GregorianCalendar.class) {
                     return formatField(name, o, cls);
                 }
                 // 数组
@@ -78,43 +78,40 @@ public class OutputLogParameter {
                 if (name == null || name.isEmpty()) {
                     name = cls.getTypeName();
                 }
-                
+
                 result = result + name + ":{";
-                if (name.indexOf("com.southgis.") < 0 || ilay > 10) { //非系统内定义的对象 或 已展开10层，不再展开
+                if (!name.contains("com.zakl.") || ilay > 10) { //非系统内定义的对象 或 已展开10层，不再展开
                     result = result + "...}";
                     return result;
                 }
                 //系统内对象
                 Field[] fs = cls.getDeclaredFields();
-                if (fs != null) {
-                    for (Field f : fs) {
-                        f.setAccessible(true);
-                        value = f.get(o);
-                        if (value != null) {
-                            if (value instanceof Collection) {
-                                result = result + printCollection(value, f.getName(), null, ilay + 1);
-                            } else if (value instanceof Map) {
-                                result = result + printMap(value, f.getName(), null, ilay + 1);
-                            }
-                            //springmvc 注入对象要排除(排除jre类)
-                            else if (value.getClass().getClassLoader() != null) {
-                                result = result + printFields(value, f.getName(), ilay + 1);
-                            }
-                        } else {
-                            result = result + f.getName() + ":null";
+                for (Field f : fs) {
+                    f.setAccessible(true);
+                    value = f.get(o);
+                    if (value != null) {
+                        if (value instanceof Collection) {
+                            result = result + printCollection(value, f.getName(), null, ilay + 1);
+                        } else if (value instanceof Map) {
+                            result = result + printMap(value, f.getName(), null, ilay + 1);
                         }
-                        result = result + ",";
+                        //springmvc 注入对象要排除(排除jre类)
+                        else if (value.getClass().getClassLoader() != null) {
+                            result = result + printFields(value, f.getName(), ilay + 1);
+                        }
+                    } else {
+                        result = result + f.getName() + ":null";
                     }
+                    result = result + ",";
                 }
                 if (result.endsWith(",")) {
                     result = result.substring(0, result.length() - 1);
                 }
                 result = result + "}";
-                
-            } catch (Exception e1) {
-                
+            } catch (Exception ignored) {
+
             }
-            
+
         }
         return result;
     }
@@ -136,9 +133,9 @@ public class OutputLogParameter {
         } else {
             result = result + clazz.getTypeName() + ":[";
         }
-        Collection<Object> co = (Collection<Object>)value;
+        Collection<Object> co = (Collection<Object>) value;
         if (co != null) {
-            
+
             Object[] os = co.toArray();
             for (int n = 0; n < os.length; n++) {
                 result = result + printFields(os[n], "", ilay + 1);
@@ -168,7 +165,7 @@ public class OutputLogParameter {
         } else {
             result = result + clazz.getTypeName() + ":[";
         }
-        Map<Object, Object> m = ((Map<Object, Object>)value);
+        Map<Object, Object> m = ((Map<Object, Object>) value);
         if (m != null) {
             Collection<Object> keys = m.keySet();
             Object[] os = keys.toArray();
@@ -225,9 +222,9 @@ public class OutputLogParameter {
      * @return string
      */
     private static String formatField(String name, Object value, Class<?> clazz) {
-        String result = "";
+        String result;
         if (clazz == Calendar.class || clazz == GregorianCalendar.class) {
-            Calendar cl = (Calendar)value;
+            Calendar cl = (Calendar) value;
             if (cl != null) {
                 value = cl.getTime();
             }
