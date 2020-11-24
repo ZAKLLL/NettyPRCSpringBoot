@@ -93,9 +93,9 @@ public class MethodProxyAdvisor implements MethodInterceptor {
                 Object[] args = JsonUtils.jsonsToObjects(parametersInJson, parameterTypesInString);
                 Class<?>[] parameterTypes = ClassUtils.toClass(args);
                 Method method = MethodUtils.getMatchingAccessibleMethod(processors.getObject().getClass(), methodName, parameterTypes);
-                if (filter.before(method, processors.getObject(), parametersInJson)) {
+                if (filter.before(method, processors.getObject(), args)) {
                     Object result = invocation.proceed();
-                    filter.after(method, processors.getObject(), parametersInJson);
+                    filter.after(method, processors.getObject(), args);
                     setReturnNotNull(result != null);
                     return result;
                 } else {

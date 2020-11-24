@@ -32,7 +32,7 @@ public class JsonUtils {
         }
         Object[] ret = new Object[jsons.length];
         for (int i = 0; i < ret.length; i++) {
-            Class c = Thread.currentThread().getClass().getClassLoader().loadClass(unBoxTypeMap.getOrDefault(types[i], types[i]));
+            Class c = Thread.currentThread().getContextClassLoader().loadClass(unBoxTypeMap.getOrDefault(types[i], types[i]));
             ret[i] = JSON.parseObject(jsons[i], c);
         }
         return ret;
