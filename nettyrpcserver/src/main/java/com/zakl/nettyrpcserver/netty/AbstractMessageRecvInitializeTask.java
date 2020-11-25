@@ -20,9 +20,9 @@ import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.util.BeanUtils;
-import com.zakl.nettyrpcserver.core.Modular;
-import com.zakl.nettyrpcserver.core.ModuleInvoker;
-import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.moudular.Modular;
+import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
+import com.zakl.nettyrpcserver.moudular.ModuleProvider;
 import com.zakl.nettyrpcserver.filter.ModuleFilterChainWrapper;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
@@ -106,15 +106,17 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
     private Object invoke(MethodInvoker mi, MessageRequest request) throws Throwable {
         //链式过滤器调用
         if (modular != null) {
-            ModuleProvider provider = modular.invoke(new ModuleInvoker() {
+            ModuleInvoker moduleInvoker = new ModuleInvoker() {
 
                 @Override
                 public Class getInterface() {
                     return mi.getClass().getInterfaces()[0];
                 }
 
+                //链式调用最终被调用的方法
                 @Override
                 public Object invoke(MessageRequest request) throws Throwable {
+                    //目标方法反射调用
                     return mi.invoke(request);
                 }
 
@@ -122,9 +124,13 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
                 public void destroy() {
 
                 }
-            }, request);
+            };
+            //ModuleFilterChainWrapper,对listener进行调用
+            ModuleProvider provider = modular.invoke(moduleInvoker, request);
+            //进行过滤链调用
             return provider.getInvoker().invoke(request);
         } else {
+            //目标方法反射调用
             return mi.invoke(request);
         }
     }

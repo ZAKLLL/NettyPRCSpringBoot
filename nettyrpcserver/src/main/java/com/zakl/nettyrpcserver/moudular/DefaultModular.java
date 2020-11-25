@@ -13,19 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.core;
+package com.zakl.nettyrpcserver.moudular;
 
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
- * @filename:Modular.java
- * @description:Modular功能模块
+ * @author tangjie<https: / / github.com / tang-jie>
+ * @filename:DefaultModular.java
+ * @description:DefaultModular功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/2/1
  */
-public interface Modular {
-    <T> ModuleProvider<T> invoke(ModuleInvoker<T> invoker, MessageRequest request);
+public class DefaultModular implements Modular {
+    @Override
+    public <T> ModuleProvider<T> invoke(ModuleInvoker<T> invoker, MessageRequest request) {
+        return new ModuleProvider<T>() {
+            @Override
+            public ModuleInvoker<T> getInvoker() {
+                return invoker;
+            }
+
+            @Override
+            public void destoryInvoker() {
+                invoker.destroy();
+            }
+        };
+    }
 }
 

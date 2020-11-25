@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.core;
+package com.zakl.nettyrpcserver.jmx.webmetrics;
 
 
 import com.zakl.nettyrpcserver.netty.MessageRecvExecutor;
+import com.zakl.nettyrpcserver.utils.ReflectionUtils;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class AbilityDetailProvider implements AbilityDetail {
             utils.getProvider().append(STYLE).append(HEADER);
         }
 
-        Set<String> s = (Set<String>) map.keySet();
+        Set<String> s = map.keySet();
         Iterator<String> iter = s.iterator();
         String key;
         while (iter.hasNext()) {

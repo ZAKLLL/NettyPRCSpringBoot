@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcserver.listener.support;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.moudular.ModuleProvider;
 import com.zakl.nettyrpcserver.listener.ModuleListener;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

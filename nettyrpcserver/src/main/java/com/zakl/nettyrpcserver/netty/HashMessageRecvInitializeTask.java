@@ -18,7 +18,7 @@ package com.zakl.nettyrpcserver.netty;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.parallel.HashCriticalSection;
-import com.zakl.nettyrpcserver.core.ReflectionUtils;
+import com.zakl.nettyrpcserver.utils.ReflectionUtils;
 import com.zakl.nettyrpcserver.filter.ServiceFilterBinder;
 import com.zakl.nettyrpcserver.jmx.HashModuleMetricsVisitor;
 import com.zakl.nettyrpcserver.jmx.ModuleMetricsVisitor;

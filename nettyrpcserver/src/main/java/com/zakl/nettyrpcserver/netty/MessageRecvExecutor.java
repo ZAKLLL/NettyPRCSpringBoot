@@ -22,7 +22,7 @@ import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.parallel.NamedThreadFactory;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcserver.compiler.AccessAdaptiveProvider;
-import com.zakl.nettyrpcserver.core.AbilityDetailProvider;
+import com.zakl.nettyrpcserver.jmx.webmetrics.AbilityDetailProvider;
 import com.zakl.nettyrpcserver.jmx.ModuleMetricsHandler;
 import com.zakl.nettyrpcserver.jmx.resolver.ApiEchoResolver;
 import com.zakl.nettyrpcserver.parallel.RpcThreadPool;

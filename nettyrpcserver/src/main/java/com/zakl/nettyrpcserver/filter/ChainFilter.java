@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcserver.filter;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.ModuleInvoker;
+import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
 
 /**
  * @author tangjie<https://github.com/tang-jie>

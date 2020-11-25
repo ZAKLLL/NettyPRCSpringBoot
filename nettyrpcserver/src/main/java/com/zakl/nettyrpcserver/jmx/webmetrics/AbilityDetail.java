@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Newland Group Holding Limited
+ * Copyright (C) 2017 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.core;
+package com.zakl.nettyrpcserver.jmx.webmetrics;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:ModuleProvider.java
- * @description:ModuleProvider
+ * @filename:AbilityDetail.java
+ * @description:AbilityDetail功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2018/1/31
+ * @since 2017/4/7
  */
-public interface ModuleProvider<T> {
-    ModuleInvoker<T> getInvoker();
-
-    void destoryInvoker();
+public interface AbilityDetail {
+    StringBuilder listAbilityDetail(boolean html);
 }
 

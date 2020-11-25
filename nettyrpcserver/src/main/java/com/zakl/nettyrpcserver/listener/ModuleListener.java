@@ -17,7 +17,7 @@ package com.zakl.nettyrpcserver.listener;
 
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.moudular.ModuleProvider;
 
 /**
  * @author tangjie<https://github.com/tang-jie>

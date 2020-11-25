@@ -17,7 +17,7 @@ package com.zakl.nettyrpcserver.compiler.weaver;
 
 import com.zakl.nettyrpc.common.exception.CreateProxyException;
 import com.zakl.nettyrpcserver.compiler.invoke.ObjectInvoker;
-import com.zakl.nettyrpcserver.core.ReflectionUtils;
+import com.zakl.nettyrpcserver.utils.ReflectionUtils;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;

@@ -17,7 +17,7 @@ package com.zakl.nettyrpcserver.compiler;
 
 import com.google.common.io.Files;
 import com.zakl.nettyrpcserver.compiler.intercept.SimpleMethodInterceptor;
-import com.zakl.nettyrpcserver.core.ReflectionUtils;
+import com.zakl.nettyrpcserver.utils.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 

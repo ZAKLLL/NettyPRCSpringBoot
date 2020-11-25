@@ -38,6 +38,7 @@ import java.util.concurrent.Executors;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+//因为需要ServiceConfig 将Service注入到handlerMap中,所有使用DependsOn强制依赖加载
 @Component(value = NettyRpcRegistry.REGISTRY_BEAN_NAME)
 @DependsOn(ServiceConfig.SERVICE_CONFIG_BEAN_NAME)
 public class NettyRpcRegistry implements DisposableBean {
@@ -54,8 +55,6 @@ public class NettyRpcRegistry implements DisposableBean {
     @Value("${netty.rpc.server.echoApiPort}")
     private String echoApiPort;
 
-    @Autowired
-    private ServiceConfig serviceConfig;
 
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 

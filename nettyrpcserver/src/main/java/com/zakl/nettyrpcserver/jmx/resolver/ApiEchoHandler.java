@@ -15,7 +15,7 @@
  */
 package com.zakl.nettyrpcserver.jmx.resolver;
 
-import com.zakl.nettyrpcserver.core.AbilityDetailProvider;
+import com.zakl.nettyrpcserver.jmx.webmetrics.AbilityDetailProvider;
 import com.zakl.nettyrpcserver.jmx.ModuleMetricsProcessor;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

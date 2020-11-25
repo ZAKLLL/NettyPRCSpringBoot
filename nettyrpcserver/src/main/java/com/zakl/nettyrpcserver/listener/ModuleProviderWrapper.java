@@ -17,8 +17,8 @@ package com.zakl.nettyrpcserver.listener;
 
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.ModuleInvoker;
-import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
+import com.zakl.nettyrpcserver.moudular.ModuleProvider;
 
 import java.util.List;
 

@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.core;
-
-
-import com.zakl.nettyrpc.common.model.MessageRequest;
+package com.zakl.nettyrpcserver.moudular;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:ModuleInvoker.java
- * @description:ModuleInvoker功能模块
+ * @filename:ModuleProvider.java
+ * @description:ModuleProvider
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/1/31
  */
-public interface ModuleInvoker<T> {
-    Class<T> getInterface();
+public interface ModuleProvider<T> {
+    ModuleInvoker<T> getInvoker();
 
-    Object invoke(MessageRequest request) throws Throwable;
-
-    void destroy();
+    void destoryInvoker();
 }
 

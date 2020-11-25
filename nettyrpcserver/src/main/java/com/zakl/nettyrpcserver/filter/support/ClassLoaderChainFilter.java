@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcserver.filter.support;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.ModuleInvoker;
+import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
 import com.zakl.nettyrpcserver.filter.ChainFilter;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +38,7 @@ public class ClassLoaderChainFilter implements ChainFilter {
         //加载本地service
         Thread.currentThread().setContextClassLoader(invoker.getInterface().getClassLoader());
 
-        Object result = null;
+        Object result;
         try {
             result = invoker.invoke(request);
             return result;

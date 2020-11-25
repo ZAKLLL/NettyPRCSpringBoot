@@ -16,10 +16,9 @@
 package com.zakl.nettyrpcserver.filter;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.DefaultModular;
-import com.zakl.nettyrpcserver.core.Modular;
-import com.zakl.nettyrpcserver.core.ModuleInvoker;
-import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.moudular.Modular;
+import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
+import com.zakl.nettyrpcserver.moudular.ModuleProvider;
 import com.zakl.nettyrpcserver.filter.support.ClassLoaderChainFilter;
 import com.zakl.nettyrpcserver.filter.support.EchoChainFilter;
 import com.zakl.nettyrpcserver.listener.ModuleListenerChainWrapper;
@@ -54,6 +53,7 @@ public class ModuleFilterChainWrapper implements Modular {
     private ChainFilter echoChainFilter;
 
 
+    //注册过滤链
     @PostConstruct
     public void init() {
         filters = new ArrayList<>();
@@ -64,9 +64,17 @@ public class ModuleFilterChainWrapper implements Modular {
 
     @Override
     public <T> ModuleProvider<T> invoke(ModuleInvoker<T> invoker, MessageRequest request) {
+        //进行Listener调用
         return moduleListenerChainWrapper.invoke(buildChain(invoker), request);
     }
 
+    /**
+     * 构造过滤链
+     *
+     * @param invoker
+     * @param <T>
+     * @return
+     */
     private <T> ModuleInvoker<T> buildChain(ModuleInvoker<T> invoker) {
         ModuleInvoker last = invoker;
 
@@ -77,6 +85,7 @@ public class ModuleFilterChainWrapper implements Modular {
                 last = new ModuleInvoker<T>() {
                     @Override
                     public Object invoke(MessageRequest request) throws Throwable {
+                        //将当前参数传递下去,进行链式调用
                         return filter.invoke(next, request);
                     }
 

@@ -17,7 +17,7 @@ package com.zakl.nettyrpcserver.filter.support;
 
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
-import com.zakl.nettyrpcserver.core.ModuleInvoker;
+import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
 import com.zakl.nettyrpcserver.filter.ChainFilter;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class EchoChainFilter implements ChainFilter {
 
     @Override
     public Object invoke(ModuleInvoker<?> invoker, MessageRequest request) throws Throwable {
-        Object o = null;
+        Object o;
         try {
             System.out.println("EchoChainFilter##TRACE MESSAGE-ID:" + request.getMessageId());
             o = invoker.invoke(request);

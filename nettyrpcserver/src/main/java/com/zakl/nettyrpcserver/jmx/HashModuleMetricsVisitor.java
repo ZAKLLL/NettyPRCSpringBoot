@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcserver.jmx;
 
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
-import com.zakl.nettyrpcserver.core.ReflectionUtils;
+import com.zakl.nettyrpcserver.utils.ReflectionUtils;
 import com.zakl.nettyrpcserver.netty.MessageRecvExecutor;
 
 import java.util.*;
