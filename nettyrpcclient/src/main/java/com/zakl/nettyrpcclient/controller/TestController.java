@@ -11,6 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
+import java.util.stream.IntStream;
+
 
 /**
  * @author ZhangJiaKui
@@ -48,12 +54,35 @@ public class TestController {
         return costTimeCalculate.calculate().toString();
     }
 
+
     @GetMapping("/p")
-    public String p() {
-        Person person = new Person();
-        person.setAge(16);
-        person.setId(11);
-        person.setName("张三");
-        return personManage.queryP(person, 5).toString();
+    public List<String> p() throws InterruptedException, ExecutionException {
+        List<String> ret = new ArrayList<>();
+        List<FutureTask> futureTasks = new ArrayList<>();
+        CountDownLatch countDownLatch = new CountDownLatch(100000);
+        IntStream.range(0, 100000).forEach(i -> {
+            Callable<Person> callable = () -> {
+                System.out.println("线程" + i + "开始工作");
+                countDownLatch.countDown();
+                Person person = new Person();
+                person.setAge(i);
+                person.setId(i);
+                person.setName("张三" + i);
+                return personManage.queryP(person, i);
+            };
+            FutureTask<Person> personFutureTask = new FutureTask<>(callable);
+            futureTasks.add(personFutureTask);
+            Thread thread = new Thread(personFutureTask);
+            thread.start();
+        });
+        countDownLatch.await();
+        for (FutureTask futureTask : futureTasks) {
+            String s = futureTask.get().toString();
+            ret.add(s);
+            System.out.println(s);
+        }
+        System.out.println(ret.size());
+        return ret;
     }
+
 }
