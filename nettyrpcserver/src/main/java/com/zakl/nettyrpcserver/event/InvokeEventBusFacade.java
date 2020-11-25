@@ -16,7 +16,7 @@
 package com.zakl.nettyrpcserver.event;
 
 
-import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsHandler;
+import com.zakl.nettyrpcserver.jmx.ModuleMetricsHandler;
 
 import java.util.EnumMap;
 import java.util.Map;

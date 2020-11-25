@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty.resolver;
+package com.zakl.nettyrpcserver.jmx.resolver;
 
 import com.zakl.nettyrpcserver.core.AbilityDetailProvider;
-import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsProcessor;
+import com.zakl.nettyrpcserver.jmx.ModuleMetricsProcessor;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

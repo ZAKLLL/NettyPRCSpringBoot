@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty.jmx;
+package com.zakl.nettyrpcserver.jmx;
 
 import com.zakl.nettyrpcserver.netty.MessageRecvExecutor;
 import com.zakl.nettyrpcserver.parallel.ThreadPoolStatus;
@@ -37,7 +37,7 @@ import java.io.IOException;
 
 @Configuration
 @EnableMBeanExport
-@ComponentScan("com.zakl.nettyrpcserver.netty.jmx")
+@ComponentScan("com.zakl.nettyrpcserver.jmx")
 public class ThreadPoolMonitorProvider {
     public static final String DELIMITER = ":";
     public static final String JMX_POOL_SIZE_METHOD = "setPoolSize";
@@ -82,7 +82,7 @@ public class ThreadPoolMonitorProvider {
         mBeanServerConnectionFactoryBean.setServiceUrl(url);
         mBeanServerConnectionFactoryBean.afterPropertiesSet();
         MBeanServerConnection connection = mBeanServerConnectionFactoryBean.getObject();
-        ObjectName objectName = new ObjectName("com.zakl.nettyrpcserver.netty.jmx:name=threadPoolStatus,type=ThreadPoolStatus");
+        ObjectName objectName = new ObjectName("com.zakl.nettyrpcserver.jmx:name=threadPoolStatus,type=ThreadPoolStatus");
 
         connection.invoke(objectName, JMX_POOL_SIZE_METHOD, new Object[]{status.getPoolSize()}, new String[]{int.class.getName()});
         connection.invoke(objectName, JMX_ACTIVE_COUNT_METHOD, new Object[]{status.getActiveCount()}, new String[]{int.class.getName()});

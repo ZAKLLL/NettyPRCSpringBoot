@@ -20,7 +20,7 @@ import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.parallel.BlockingQueueType;
 import com.zakl.nettyrpc.common.parallel.NamedThreadFactory;
 import com.zakl.nettyrpc.common.parallel.policy.*;
-import com.zakl.nettyrpcserver.netty.jmx.ThreadPoolMonitorProvider;
+import com.zakl.nettyrpcserver.jmx.ThreadPoolMonitorProvider;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;

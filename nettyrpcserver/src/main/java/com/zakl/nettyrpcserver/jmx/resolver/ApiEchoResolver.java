@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty.resolver;
+package com.zakl.nettyrpcserver.jmx.resolver;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

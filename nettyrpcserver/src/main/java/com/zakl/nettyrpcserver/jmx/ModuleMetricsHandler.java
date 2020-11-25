@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty.jmx;
+package com.zakl.nettyrpcserver.jmx;
 
 import com.zakl.nettyrpc.common.parallel.AbstractDaemonThread;
 import com.zakl.nettyrpc.common.parallel.SemaphoreWrapper;
@@ -27,7 +27,6 @@ import javax.management.remote.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 
-import static com.zakl.nettyrpcserver.netty.jmx.ThreadPoolMonitorProvider.DELIMITER;
+import static com.zakl.nettyrpcserver.jmx.ThreadPoolMonitorProvider.DELIMITER;
 
 
 /**
@@ -46,7 +45,7 @@ import static com.zakl.nettyrpcserver.netty.jmx.ThreadPoolMonitorProvider.DELIMI
  * @since 2017/10/12
  */
 public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
-    public final static String MBEAN_NAME = "com.zakl.nettyrpcserver.netty.jmx:type=ModuleMetricsHandler";
+    public final static String MBEAN_NAME = "com.zakl.nettyrpcserver.jmx:type=ModuleMetricsHandler";
     public final static int MODULE_METRICS_JMX_PORT = 1098;
     private String moduleMetricsJmxUrl = "";
     private Semaphore semaphore = new Semaphore(0);

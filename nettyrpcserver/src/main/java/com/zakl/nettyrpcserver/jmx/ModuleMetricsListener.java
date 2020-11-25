@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty.jmx;
+package com.zakl.nettyrpcserver.jmx;
 
 
 import com.zakl.nettyrpcserver.event.AbstractInvokeEventBus;

@@ -15,7 +15,7 @@
  */
 package com.zakl.nettyrpcserver.event;
 
-import com.zakl.nettyrpcserver.netty.jmx.ModuleMetricsVisitor;
+import com.zakl.nettyrpcserver.jmx.ModuleMetricsVisitor;
 
 import java.util.Observable;
 
