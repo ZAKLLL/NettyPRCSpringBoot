@@ -28,9 +28,9 @@ import java.lang.reflect.Method;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/7/27
  */
-@Component(value = SimpleFilter.FILTER_NAME)
+@Component(value = SimpleFilter.FILTER_BEAN_NAME)
 public class SimpleFilter implements Filter {
-    public final static String FILTER_NAME = "simpleFilter";
+    public final static String FILTER_BEAN_NAME = "simpleFilter";
 
     @Override
     public boolean before(Method method, Object processor, Object[] requestObjects) {

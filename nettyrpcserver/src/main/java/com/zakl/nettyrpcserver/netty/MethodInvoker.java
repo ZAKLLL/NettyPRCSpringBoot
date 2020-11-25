@@ -42,27 +42,11 @@ public class MethodInvoker {
         this.serviceBean = serviceBean;
     }
 
-    private final static Map<String, String> unBoxTypeMap;
-
-    static {
-        unBoxTypeMap = new HashMap<>();
-        unBoxTypeMap.put("int", "java.lang.Integer");
-        unBoxTypeMap.put("byte", "java.lang.Byte");
-        unBoxTypeMap.put("short", "java.lang.Short");
-        unBoxTypeMap.put("long", "java.lang.Long");
-        unBoxTypeMap.put("double", "java.lang.Double");
-        unBoxTypeMap.put("float", "java.lang.Float");
-        unBoxTypeMap.put("bool", "java.lang.Boolean");
-    }
 
     public Object invoke(MessageRequest request) throws Throwable {
         String methodName = request.getMethodName();
         String[] parameters = request.getParametersVal();
         String[] typeParameters = request.getParameterTypes();
-//        Object[] args = new Object[parameters.length];
-//        for (int i = 0; i < args.length; i++) {
-//            args[i] = JSON.parseObject(parameters[i], this.getClass().getClassLoader().loadClass(unBoxTypeMap.getOrDefault(typeParameters[i], typeParameters[i])));
-//        }
         Object[] args = JsonUtils.jsonsToObjects(parameters, typeParameters);
         sw.reset();
         sw.start();

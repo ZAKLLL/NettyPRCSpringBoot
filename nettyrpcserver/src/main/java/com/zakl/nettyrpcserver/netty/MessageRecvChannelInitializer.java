@@ -32,7 +32,7 @@ import java.util.Map;
 public class MessageRecvChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private RpcSerializeProtocol protocol;
-    private RpcRecvSerializeFrame frame = null;
+    private final RpcRecvSerializeFrame frame;
 
     MessageRecvChannelInitializer buildRpcSerializeProtocol(RpcSerializeProtocol protocol) {
         this.protocol = protocol;

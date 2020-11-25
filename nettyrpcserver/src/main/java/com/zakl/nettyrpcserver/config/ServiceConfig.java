@@ -3,9 +3,8 @@ package com.zakl.nettyrpcserver.config;
 import com.zakl.nettyrpc.common.util.BeanUtils;
 import com.zakl.nettyrpcserver.filter.Filter;
 import com.zakl.nettyrpcserver.filter.ServiceFilterBinder;
+import com.zakl.nettyrpcserver.filter.support.SimpleFilter;
 import com.zakl.nettyrpcserver.netty.MessageRecvExecutor;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,7 @@ import java.util.Map;
 public class ServiceConfig {
     public final static String SERVICE_CONFIG_BEAN_NAME = "serviceConfig";
 
-    public final static String filter = "simpleFilter";
+    public final static String filterBeanName = SimpleFilter.FILTER_BEAN_NAME;
 
     @PostConstruct
     public void init() {
@@ -37,7 +36,7 @@ public class ServiceConfig {
             //因为远程调用面向接口编程,所以单一实现接口,取index==0即可
             Class<?> c = serviceBeanMap.get(s).getClass().getInterfaces()[0];
             ServiceFilterBinder binder = new ServiceFilterBinder();
-            binder.setFilter((Filter) ctx.getBean(filter));
+            binder.setFilter((Filter) ctx.getBean(filterBeanName));
             binder.setObject(serviceBeanMap.get(s));
             handlerMap.put(c.getName(), binder);
         }

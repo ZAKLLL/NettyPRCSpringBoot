@@ -17,7 +17,6 @@ package com.zakl.nettyrpcserver.netty;
 
 import com.google.common.util.concurrent.*;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
-import com.zakl.nettyrpc.common.model.MessageKeyVal;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.parallel.NamedThreadFactory;
@@ -31,16 +30,10 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.nio.channels.spi.SelectorProvider;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.*;
-import java.util.logging.Level;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -49,7 +42,7 @@ import java.util.logging.Level;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class MessageRecvExecutor implements ApplicationContextAware {
+public class MessageRecvExecutor {
 
     private String serverAddress;
     private int serverPort;
@@ -103,24 +96,6 @@ public class MessageRecvExecutor implements ApplicationContextAware {
         }, threadPoolExecutor);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        try {
-            MessageKeyVal keyVal = (MessageKeyVal) ctx.getBean(Class.forName("com.zakl.nettyrpc.common.model.MessageKeyVal"));
-            Map<String, Object> rpcServiceObject = keyVal.getMessageKeyVal();
-
-            Set s = rpcServiceObject.entrySet();
-            Iterator<Map.Entry<String, Object>> it = s.iterator();
-            Map.Entry<String, Object> entry;
-
-            while (it.hasNext()) {
-                entry = it.next();
-                handlerMap.put(entry.getKey(), entry.getValue());
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MessageRecvExecutor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     public void start() {
         try {

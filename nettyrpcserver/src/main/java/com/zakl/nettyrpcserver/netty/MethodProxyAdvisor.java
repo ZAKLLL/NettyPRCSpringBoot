@@ -52,20 +52,6 @@ public class MethodProxyAdvisor implements MethodInterceptor {
         this.handlerMap = handlerMap;
     }
 
-    private final static Map<String, String> unBoxTypeMap;
-
-    static {
-        unBoxTypeMap = new HashMap<>();
-        unBoxTypeMap.put("int", "java.lang.Integer");
-        unBoxTypeMap.put("byte", "java.lang.Byte");
-        unBoxTypeMap.put("short", "java.lang.Short");
-        unBoxTypeMap.put("long", "java.lang.Long");
-        unBoxTypeMap.put("double", "java.lang.Double");
-        unBoxTypeMap.put("float", "java.lang.Float");
-        unBoxTypeMap.put("bool", "java.lang.Boolean");
-    }
-
-
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Object[] params = invocation.getArguments();
@@ -76,17 +62,17 @@ public class MethodProxyAdvisor implements MethodInterceptor {
         MessageRequest request = (MessageRequest) params[0];
 
         String className = request.getClassName();
-        Object serviceBean = handlerMap.get(className);
+        Object handlerBean = handlerMap.get(className);
         String methodName = request.getMethodName();
         String[] parametersInJson = request.getParametersVal();
         String[] parameterTypesInString = request.getParameterTypes();
 
-        boolean existFilter = ServiceFilterBinder.class.isAssignableFrom(serviceBean.getClass());
-        ((MethodInvoker) invocation.getThis()).setServiceBean(existFilter ? ((ServiceFilterBinder) serviceBean).getObject() : serviceBean);
+        boolean existFilter = ServiceFilterBinder.class.isAssignableFrom(handlerBean.getClass()) && ((ServiceFilterBinder) handlerBean).getFilter() != null;
+        ((MethodInvoker) invocation.getThis()).setServiceBean(existFilter ? ((ServiceFilterBinder) handlerBean).getObject() : handlerBean);
 
 
         if (existFilter) {
-            ServiceFilterBinder processors = (ServiceFilterBinder) serviceBean;
+            ServiceFilterBinder processors = (ServiceFilterBinder) handlerBean;
             if (processors.getFilter() != null) {
                 Filter filter = processors.getFilter();
                 Object[] args = JsonUtils.jsonsToObjects(parametersInJson, parameterTypesInString);

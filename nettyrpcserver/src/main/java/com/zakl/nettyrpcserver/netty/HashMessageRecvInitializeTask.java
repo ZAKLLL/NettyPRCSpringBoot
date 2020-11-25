@@ -40,9 +40,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 2017/10/27
  */
 public class HashMessageRecvInitializeTask extends AbstractMessageRecvInitializeTask {
-    private int hashKey = 0;
-    private static HashCriticalSection criticalSection = new HashCriticalSection();
-    private AtomicReference<ModuleMetricsVisitor> visitor = new AtomicReference<ModuleMetricsVisitor>();
+    private int hashKey;
+    private static final HashCriticalSection criticalSection = new HashCriticalSection();
+    private final AtomicReference<ModuleMetricsVisitor> visitor = new AtomicReference<>();
 
     public HashMessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
         super(request, response, handlerMap);

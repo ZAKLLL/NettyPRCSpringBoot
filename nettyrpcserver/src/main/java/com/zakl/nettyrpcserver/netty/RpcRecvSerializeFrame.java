@@ -33,13 +33,13 @@ import java.util.Map;
  */
 public class RpcRecvSerializeFrame implements RpcSerializeFrame {
 
-    private Map<String, Object> handlerMap = null;
+    private final Map<String, Object> handlerMap;
 
     public RpcRecvSerializeFrame(Map<String, Object> handlerMap) {
         this.handlerMap = handlerMap;
     }
 
-    private static ClassToInstanceMap<NettyRpcRecvHandler> handler = MutableClassToInstanceMap.create();
+    private static final ClassToInstanceMap<NettyRpcRecvHandler> handler = MutableClassToInstanceMap.create();
 
     static {
         handler.putInstance(JdkNativeRecvHandler.class, new JdkNativeRecvHandler());

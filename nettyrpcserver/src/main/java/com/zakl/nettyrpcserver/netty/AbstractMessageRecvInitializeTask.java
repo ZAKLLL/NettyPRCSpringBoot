@@ -46,7 +46,6 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
     protected static final String METHOD_MAPPED_NAME = "invoke";
     protected boolean returnNotNull = true;
     protected long invokeTimespan;
-//    protected Modular modular = BeanFactoryUtils.getBean(ModuleFilterChainWrapper.FILTER_CHAIN_WRAPPER_BEAN_NAME);
     protected Modular modular = BeanUtils.getBean(ModuleFilterChainWrapper.FILTER_CHAIN_WRAPPER_BEAN_NAME);
 
     public AbstractMessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
@@ -81,7 +80,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         } catch (Throwable t) {
             response.setError(getStackTrace(t));
             t.printStackTrace();
-            System.err.printf("RPC Server invoke error!\n");
+            System.err.println("RPC Server invoke error!");
             injectFailInvoke(t);
             return Boolean.FALSE;
         } finally {
@@ -89,7 +88,23 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         }
     }
 
+    private Object reflect(MessageRequest request) throws Throwable {
+        ProxyFactory weaver = new ProxyFactory(new MethodInvoker());
+        NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
+        advisor.setMappedName(METHOD_MAPPED_NAME);
+        //设置AOP 方法
+        advisor.setAdvice(new MethodProxyAdvisor(handlerMap));
+        weaver.addAdvisor(advisor);
+        MethodInvoker mi = (MethodInvoker) weaver.getProxy();
+        Object obj = invoke(mi, request);
+        invokeTimespan = mi.getInvokeTimespan();
+        setReturnNotNull(((MethodProxyAdvisor) advisor.getAdvice()).isReturnNotNull());
+        return obj;
+    }
+
+
     private Object invoke(MethodInvoker mi, MessageRequest request) throws Throwable {
+        //链式过滤器调用
         if (modular != null) {
             ModuleProvider provider = modular.invoke(new ModuleInvoker() {
 
@@ -114,19 +129,6 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         }
     }
 
-    private Object reflect(MessageRequest request) throws Throwable {
-        ProxyFactory weaver = new ProxyFactory(new MethodInvoker());
-        NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
-        advisor.setMappedName(METHOD_MAPPED_NAME);
-        //设置AOP 方法
-        advisor.setAdvice(new MethodProxyAdvisor(handlerMap));
-        weaver.addAdvisor(advisor);
-        MethodInvoker mi = (MethodInvoker) weaver.getProxy();
-        Object obj = invoke(mi, request);
-        invokeTimespan = mi.getInvokeTimespan();
-        setReturnNotNull(((MethodProxyAdvisor) advisor.getAdvice()).isReturnNotNull());
-        return obj;
-    }
 
     public String getStackTrace(Throwable ex) {
         StringWriter buf = new StringWriter();
