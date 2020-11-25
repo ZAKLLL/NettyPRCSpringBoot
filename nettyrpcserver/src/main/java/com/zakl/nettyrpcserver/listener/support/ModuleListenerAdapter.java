@@ -19,6 +19,7 @@ import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpcserver.core.ModuleProvider;
 import com.zakl.nettyrpcserver.listener.ModuleListener;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -27,7 +28,10 @@ import org.apache.commons.lang3.StringUtils;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/2/1
  */
+@Component(value = ModuleListenerAdapter.LISTENER_ADAPTER_BEAN_NAME)
 public class ModuleListenerAdapter implements ModuleListener {
+    public final static String LISTENER_ADAPTER_BEAN_NAME = "moduleListenerAdapter";
+
     @Override
     public void exported(ModuleProvider<?> provider, MessageRequest request) {
         System.out.println(StringUtils.center("[ModuleListenerAdapter##exported]", 48, "*"));

@@ -21,17 +21,19 @@ import com.zakl.nettyrpcserver.filter.ChainFilter;
 import org.springframework.stereotype.Component;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:ClassLoaderChainFilter.java
  * @description:ClassLoaderChainFilter功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/1/31
  */
-@Component
+@Component(value = ClassLoaderChainFilter.FILTER_NAME)
 public class ClassLoaderChainFilter implements ChainFilter {
+    public final static String FILTER_NAME = "classLoaderChainFilter";
 
     @Override
     public Object invoke(ModuleInvoker<?> invoker, MessageRequest request) throws Throwable {
+        System.out.println("ClassLoaderChainFilter##TRACE MESSAGE-ID:" + request.getMessageId());
         ClassLoader ocl = Thread.currentThread().getContextClassLoader();
         //加载本地service
         Thread.currentThread().setContextClassLoader(invoker.getInterface().getClassLoader());

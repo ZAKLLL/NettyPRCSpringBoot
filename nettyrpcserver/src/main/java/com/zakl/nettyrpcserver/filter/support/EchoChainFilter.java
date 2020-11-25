@@ -22,14 +22,15 @@ import com.zakl.nettyrpcserver.filter.ChainFilter;
 import org.springframework.stereotype.Component;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:EchoChainFilter.java
  * @description:EchoChainFilter功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/1/31
  */
-@Component
+@Component(value = EchoChainFilter.FILTER_NAME)
 public class EchoChainFilter implements ChainFilter {
+    public final static String FILTER_NAME = "echoChainFilter";
 
     @Override
     public Object invoke(ModuleInvoker<?> invoker, MessageRequest request) throws Throwable {

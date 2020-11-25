@@ -16,11 +16,18 @@
 package com.zakl.nettyrpcserver.filter;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
+import com.zakl.nettyrpcserver.core.DefaultModular;
 import com.zakl.nettyrpcserver.core.Modular;
 import com.zakl.nettyrpcserver.core.ModuleInvoker;
 import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.filter.support.ClassLoaderChainFilter;
+import com.zakl.nettyrpcserver.filter.support.EchoChainFilter;
+import com.zakl.nettyrpcserver.listener.ModuleListenerChainWrapper;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,21 +37,34 @@ import java.util.List;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2018/2/2
  */
-//@Component(value = "modular")
+@Component(value = ModuleFilterChainWrapper.FILTER_CHAIN_WRAPPER_BEAN_NAME)
 public class ModuleFilterChainWrapper implements Modular {
-    private Modular modular;
+    public final static String FILTER_CHAIN_WRAPPER_BEAN_NAME = "ModuleFilterChainWrapper";
+
+    @Resource(name = ModuleListenerChainWrapper.CHAIN_WRAPPER_BEAN_NAME)
+    private Modular moduleListenerChainWrapper;
+
     private List<ChainFilter> filters;
 
-    public ModuleFilterChainWrapper(Modular modular) {
-        if (modular == null) {
-            throw new IllegalArgumentException("module is null");
-        }
-        this.modular = modular;
+
+    @Resource(name = ClassLoaderChainFilter.FILTER_NAME)
+    private ChainFilter classLoaderChanFilter;
+
+    @Resource(name = EchoChainFilter.FILTER_NAME)
+    private ChainFilter echoChainFilter;
+
+
+    @PostConstruct
+    public void init() {
+        filters = new ArrayList<>();
+        filters.add(classLoaderChanFilter);
+        filters.add(echoChainFilter);
     }
+
 
     @Override
     public <T> ModuleProvider<T> invoke(ModuleInvoker<T> invoker, MessageRequest request) {
-        return modular.invoke(buildChain(invoker), request);
+        return moduleListenerChainWrapper.invoke(buildChain(invoker), request);
     }
 
     private <T> ModuleInvoker<T> buildChain(ModuleInvoker<T> invoker) {

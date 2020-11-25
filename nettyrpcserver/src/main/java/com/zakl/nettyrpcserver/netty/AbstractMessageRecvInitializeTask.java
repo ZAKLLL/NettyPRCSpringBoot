@@ -15,15 +15,15 @@
  */
 package com.zakl.nettyrpcserver.netty;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
-import com.zakl.nettyrpc.common.util.BeanFactoryUtils;
+import com.zakl.nettyrpc.common.util.BeanUtils;
 import com.zakl.nettyrpcserver.core.Modular;
 import com.zakl.nettyrpcserver.core.ModuleInvoker;
 import com.zakl.nettyrpcserver.core.ModuleProvider;
+import com.zakl.nettyrpcserver.filter.ModuleFilterChainWrapper;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
@@ -40,13 +40,14 @@ import java.util.concurrent.Callable;
  * @since 2017/10/13
  */
 public abstract class AbstractMessageRecvInitializeTask implements Callable<Boolean> {
-    protected MessageRequest request = null;
-    protected MessageResponse response = null;
-    protected Map<String, Object> handlerMap = null;
+    protected MessageRequest request;
+    protected MessageResponse response;
+    protected Map<String, Object> handlerMap;
     protected static final String METHOD_MAPPED_NAME = "invoke";
     protected boolean returnNotNull = true;
     protected long invokeTimespan;
-    protected Modular modular = BeanFactoryUtils.getBean("modular");
+//    protected Modular modular = BeanFactoryUtils.getBean(ModuleFilterChainWrapper.FILTER_CHAIN_WRAPPER_BEAN_NAME);
+    protected Modular modular = BeanUtils.getBean(ModuleFilterChainWrapper.FILTER_CHAIN_WRAPPER_BEAN_NAME);
 
     public AbstractMessageRecvInitializeTask(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
         this.request = request;
