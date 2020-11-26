@@ -38,6 +38,8 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
     private EventLoopGroup eventLoopGroup;
     private InetSocketAddress serverAddress;
     private RpcSerializeProtocol protocol;
+    //允许重连,重连次数为5
+    private int reconnectCnt = 5;
 
     public MessageSendInitializeTask(EventLoopGroup eventLoopGroup, InetSocketAddress serverAddress, RpcSerializeProtocol protocol) {
         this.eventLoopGroup = eventLoopGroup;
@@ -59,9 +61,11 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
             if (channelFuture1.isSuccess()) {
                 MessageSendHandler handler = channelFuture1.channel().pipeline().get(MessageSendHandler.class);
                 RpcServerLoader.getInstance().setMessageSendHandler(handler);
-            } else {
+            } else if (reconnectCnt > 0) {
+                reconnectCnt--;
+                //定时重连
                 eventLoopGroup.schedule(() -> {
-                    System.out.println("NettyRPC server is down,start to reconnecting to: " + serverAddress.getAddress().getHostAddress() + ':' + serverAddress.getPort());
+                    System.out.println("NettyRPC server is down,start to reconnecting to: " + (5 - reconnectCnt) + " times" + serverAddress.getAddress().getHostAddress() + ':' + serverAddress.getPort());
                     call();
                 }, RpcSystemConfig.SYSTEM_PROPERTY_CLIENT_RECONNECT_DELAY, TimeUnit.SECONDS);
             }

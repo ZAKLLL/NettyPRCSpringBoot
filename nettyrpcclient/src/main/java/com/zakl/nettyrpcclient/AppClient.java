@@ -12,12 +12,6 @@ public class AppClient {
 
     public static void main(String[] args) {
         SpringApplication.run(AppClient.class, args);
-//        ApplicationContext applicationContext = BeanUtils.getApplicationContext();
-//        for (String beanDefinitionName : applicationContext.getBeanDefinitionNames()) {
-//            System.out.println(beanDefinitionName);
-//        }
-//        System.out.println();
-
     }
 
 }

@@ -59,8 +59,8 @@ public class TestController {
     public List<String> p() throws InterruptedException, ExecutionException {
         List<String> ret = new ArrayList<>();
         List<FutureTask> futureTasks = new ArrayList<>();
-        CountDownLatch countDownLatch = new CountDownLatch(100000);
-        IntStream.range(0, 100000).forEach(i -> {
+        CountDownLatch countDownLatch = new CountDownLatch(10000);
+        IntStream.range(0, 10000).forEach(i -> {
             Callable<Person> callable = () -> {
                 System.out.println("线程" + i + "开始工作");
                 countDownLatch.countDown();

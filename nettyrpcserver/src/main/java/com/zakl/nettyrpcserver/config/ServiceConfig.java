@@ -40,7 +40,6 @@ public class ServiceConfig {
             binder.setObject(serviceBeanMap.get(s));
             handlerMap.put(c.getName(), binder);
         }
-
     }
 
 }

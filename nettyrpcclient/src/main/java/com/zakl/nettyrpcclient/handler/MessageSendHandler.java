@@ -23,8 +23,11 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.SocketAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+@Slf4j
 public class MessageSendHandler extends ChannelInboundHandlerAdapter {
 
     private ConcurrentHashMap<String, MessageCallBack> mapCallBack = new ConcurrentHashMap<>();
@@ -50,8 +54,18 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
+                + "channelActive");
         super.channelActive(ctx);
         this.remoteAddr = this.channel.remoteAddress();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
+                + "channelInactive");
+        //todo 进行重连
+        super.channelInactive(ctx);
     }
 
     @Override

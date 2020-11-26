@@ -22,10 +22,12 @@ import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcclient.parallel.RpcThreadPool;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -39,6 +41,7 @@ import java.util.logging.Logger;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+@Slf4j
 public class RpcServerLoader {
 
     private static volatile RpcServerLoader rpcServerLoader;
@@ -75,7 +78,6 @@ public class RpcServerLoader {
 
         final InetSocketAddress remoteAddr = new InetSocketAddress(host, port);
 
-        System.out.printf("[author tangjie] Netty RPC Client start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
 
         ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(new MessageSendInitializeTask(eventLoopGroup, remoteAddr, serializeProtocol));
 
@@ -84,14 +86,19 @@ public class RpcServerLoader {
             public void onSuccess(Boolean result) {
                 try {
                     lock.lock();
-
                     if (messageSendHandler == null) {
-                        handlerStatus.await();
+                        //防止重连过久,等待60秒即可
+                        boolean await = handlerStatus.await(60, TimeUnit.SECONDS);
+                        if (!await) {
+                            log.info(String.format("\n Filed to connected to NettyRPCServer!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol));
+                            return;
+                        }
                     }
-
                     if (result.equals(Boolean.TRUE) && messageSendHandler != null) {
                         connectStatus.signalAll();
                     }
+                    System.out.printf("Netty RPC Client start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
+
                 } catch (InterruptedException ex) {
                     Logger.getLogger(RpcServerLoader.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
@@ -104,6 +111,8 @@ public class RpcServerLoader {
                 t.printStackTrace();
             }
         }, threadPoolExecutor);
+
+//        return; listenableFuture.get();
     }
 
     public void setMessageSendHandler(MessageSendHandler messageInHandler) {

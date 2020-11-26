@@ -24,6 +24,10 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -35,14 +39,14 @@ import javax.annotation.PostConstruct;
 
 public class NettyRpcReference implements FactoryBean, DisposableBean {
 
-
     private String localInterfaceName;
     private String remoteInterfaceName;
     private String ipAddr;
     private int port;
     private RpcSerializeProtocol protocol;
     private EventBus eventBus = new EventBus();
-
+    private static AtomicBoolean connected = new AtomicBoolean(false);
+    private static Lock lock = new ReentrantLock();
 
     @Override
     public void destroy() {
@@ -52,7 +56,16 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     @PostConstruct
     public void init() {
-        MessageSendExecutor.getInstance().setRpcServerLoader(ipAddr, port, protocol);
+        //只进行一次连接操作
+        //todo 后期可能更改为服务可连接到不同的rpc服务,满足分布式要求
+        if (!connected.get()) {
+            lock.lock();
+            if (!connected.get()) {
+                MessageSendExecutor.getInstance().setRpcServerLoader(ipAddr, port, protocol);
+                connected.set(true);
+                lock.unlock();
+            }
+        }
         ClientStopEventListener listener = new ClientStopEventListener();
         eventBus.register(listener);
     }
@@ -120,5 +133,13 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public static AtomicBoolean getConnected() {
+        return connected;
+    }
+
+    public static void setConnected(AtomicBoolean connected) {
+        NettyRpcReference.connected = connected;
     }
 }

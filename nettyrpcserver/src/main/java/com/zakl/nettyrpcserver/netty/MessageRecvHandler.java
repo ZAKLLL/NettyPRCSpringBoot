@@ -43,8 +43,16 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
+                + "channelActive");
+        super.channelActive(ctx);
+    }
+
+    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         MessageRequest request = (MessageRequest) msg;
+        log.info("ctx->" + ctx.channel().id().asShortText() + "-----request->" + request);
         MessageResponse response = new MessageResponse();
         RecvInitializeTaskFacade facade = new RecvInitializeTaskFacade(request, response, handlerMap);
         Callable<Boolean> recvTask = facade.getTask();
@@ -55,6 +63,12 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "==>>>"
                 + "channelInactive");
+        //todo 开始执行重连操作,连续进行五次重连
+        int count = 5;
+        while (count > 0) {
+
+        }
+
         super.channelInactive(ctx);
     }
 
