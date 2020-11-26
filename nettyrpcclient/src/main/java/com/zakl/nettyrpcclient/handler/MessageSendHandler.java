@@ -19,6 +19,7 @@ import com.zakl.nettyrpcclient.config.NettyRpcReference;
 import com.zakl.nettyrpcclient.core.MessageCallBack;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
+import com.zakl.nettyrpcclient.core.MessageSendInitializeTask;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -67,7 +68,11 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
         log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
                 + "channelInactive");
         log.info("Begin to reConnected to NettyRPCServer");
-        NettyRpcReference.getConnected().set(false);
+        //设置连接状态为失败
+        MessageSendInitializeTask.getConnected().set(false);
+        //设置可连接状态为true
+        NettyRpcReference.getCanConnect().set(true);
+        //开始重新连接
         NettyRpcReference.connectedToServer();
     }
 

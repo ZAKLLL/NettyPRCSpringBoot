@@ -62,6 +62,10 @@ public class MessageSendProxy<T> extends AbstractInvocationHandler {
             parametersValInJson[i] = JSON.toJSON(args[i]).toString();
         }
 
+        boolean connected = MessageSendInitializeTask.getConnected().get();
+        if (!connected) {
+            throw new RuntimeException("Not connected NettyRPCServer yet");
+        }
         MessageSendHandler handler = RpcServerLoader.getInstance().getMessageSendHandler();
         MessageCallBack callBack = handler.sendRequest(request);
         return callBack.start();

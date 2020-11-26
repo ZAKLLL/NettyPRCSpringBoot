@@ -25,7 +25,6 @@ import org.springframework.beans.factory.FactoryBean;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -46,7 +45,7 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
     private static Integer port;
     private static RpcSerializeProtocol protocol;
     private static EventBus eventBus = new EventBus();
-    private static AtomicBoolean connected = new AtomicBoolean(false);
+    private static AtomicBoolean canConnect = new AtomicBoolean(true);
     private static Lock lock = new ReentrantLock();
 
     @Override
@@ -64,13 +63,13 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
         if (ipAddr == null || protocol == null || port == null) {
             throw new NullPointerException();
         }
-        //只进行一次连接操作
+        //只进行一次连接操作,防止多次连接资源浪费
         //todo 后期可能更改为服务可连接到不同的rpc服务,满足分布式要求
-        if (!connected.get()) {
+        if (canConnect.get()) {
             lock.lock();
-            if (!connected.get()) {
+            if (canConnect.get()) {
                 MessageSendExecutor.getInstance().setRpcServerLoader(ipAddr, port, protocol);
-                connected.set(true);
+                canConnect.set(false);
                 lock.unlock();
             }
         }
@@ -142,11 +141,11 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
         this.port = port;
     }
 
-    public static AtomicBoolean getConnected() {
-        return connected;
+    public static AtomicBoolean getCanConnect() {
+        return canConnect;
     }
 
-    public static void setConnected(AtomicBoolean connected) {
-        NettyRpcReference.connected = connected;
+    public static void setCanConnect(AtomicBoolean canConnect) {
+        NettyRpcReference.canConnect = canConnect;
     }
 }

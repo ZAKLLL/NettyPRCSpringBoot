@@ -25,6 +25,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -38,6 +39,8 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
     private EventLoopGroup eventLoopGroup;
     private InetSocketAddress serverAddress;
     private RpcSerializeProtocol protocol;
+
+    private static AtomicBoolean connected = new AtomicBoolean(false);
     //允许重连,重连次数为5
     private int reconnectCnt = 5;
 
@@ -61,6 +64,7 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
             if (channelFuture1.isSuccess()) {
                 MessageSendHandler handler = channelFuture1.channel().pipeline().get(MessageSendHandler.class);
                 RpcServerLoader.getInstance().setMessageSendHandler(handler);
+                connected.set(true);
             } else if (reconnectCnt > 0) {
                 reconnectCnt--;
                 //定时重连
@@ -72,4 +76,9 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
         });
         return Boolean.TRUE;
     }
+
+    public static AtomicBoolean getConnected() {
+        return connected;
+    }
+
 }
