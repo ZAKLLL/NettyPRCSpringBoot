@@ -34,26 +34,22 @@ public class MessageSendExecutor {
         return MessageSendExecutorHolder.INSTANCE;
     }
 
-    private RpcServerLoader loader = RpcServerLoader.getInstance();
 
     private MessageSendExecutor() {
 
     }
 
-    public MessageSendExecutor(String serverAddress, int port, RpcSerializeProtocol serializeProtocol) {
-        loader.load(serverAddress, port, serializeProtocol);
-    }
 
     public void setRpcServerLoader(String serverAddress, int port, RpcSerializeProtocol serializeProtocol) {
-        loader.load(serverAddress, port, serializeProtocol);
+        RpcServerLoader.getInstance(serverAddress + ":" + port).load(serverAddress, port, serializeProtocol);
     }
 
     public void stop() {
-        loader.unLoad();
+//        if (loader != null) loader.unLoad();
     }
 
-    public <T> T execute(Class<T> rpcInterface, String remoteInterFaceName) {
-        return Reflection.newProxy(rpcInterface, new MessageSendProxy<T>(remoteInterFaceName));
+    public <T> T execute(Class<T> rpcInterface, String remoteInterFaceName, String host, int port) {
+        return Reflection.newProxy(rpcInterface, new MessageSendProxy<T>(remoteInterFaceName,host,port));
     }
 }
 

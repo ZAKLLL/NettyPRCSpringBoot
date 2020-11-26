@@ -34,9 +34,11 @@ import java.util.UUID;
  */
 public class MessageSendProxy<T> extends AbstractInvocationHandler {
     private String remoteInterFaceName;
+    private String rpcServerLoaderKey;
 
-    public MessageSendProxy(String remoteInterFaceName) {
+    public MessageSendProxy(String remoteInterFaceName, String host, int port) {
         this.remoteInterFaceName = remoteInterFaceName;
+        rpcServerLoaderKey = host + ":" + port;
     }
 
     public MessageSendProxy() {
@@ -62,11 +64,12 @@ public class MessageSendProxy<T> extends AbstractInvocationHandler {
             parametersValInJson[i] = JSON.toJSON(args[i]).toString();
         }
 
-        boolean connected = MessageSendInitializeTask.getConnected().get();
-        if (!connected) {
+        RpcServerLoader loader = RpcServerLoader.getInstance(rpcServerLoaderKey);
+        MessageSendInitializeTask msgSendTask = loader.getMessageSendInitializeTask();
+        if (msgSendTask == null || !msgSendTask.getConnected().get()) {
             throw new RuntimeException("Not connected NettyRPCServer yet");
         }
-        MessageSendHandler handler = RpcServerLoader.getInstance().getMessageSendHandler();
+        MessageSendHandler handler = loader.getMessageSendHandler();
         MessageCallBack callBack = handler.sendRequest(request);
         return callBack.start();
     }

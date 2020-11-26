@@ -15,13 +15,13 @@
  */
 package com.zakl.nettyrpcclient.handler;
 
-import com.zakl.nettyrpcclient.config.NettyRpcReference;
-import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
-import com.zakl.nettyrpcclient.core.MessageCallBack;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
+import com.zakl.nettyrpcclient.core.MessageCallBack;
 import com.zakl.nettyrpcclient.core.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.core.NettyClientStarter;
+import com.zakl.nettyrpcclient.core.RpcServerLoader;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -29,6 +29,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,33 +47,41 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
 
     private ConcurrentHashMap<String, MessageCallBack> mapCallBack = new ConcurrentHashMap<>();
     private volatile Channel channel;
-    private SocketAddress remoteAddr;
-
-
+    private InetSocketAddress remoteAddr;
+    private RpcSerializeProtocol protocol;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
                 + "channelActive");
         super.channelActive(ctx);
-        this.remoteAddr = this.channel.remoteAddress();
+        this.remoteAddr = (InetSocketAddress) this.channel.remoteAddress();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-        //离线后移除
-        this.channel = null;
-        this.remoteAddr = null;
+
         log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
                 + "channelInactive");
         log.info("Begin to reConnected to NettyRPCServer");
-        //设置连接状态为失败
-        MessageSendInitializeTask.getConnected().set(false);
+        String ip = this.remoteAddr.getHostString();
+        int port = this.remoteAddr.getPort();
+        String remoteAddr = ip + ":" + port;
+        //离线后移除
+        this.channel = null;
+        this.remoteAddr = null;
+        RpcServerLoader instance = RpcServerLoader.getInstance(remoteAddr);
+        MessageSendInitializeTask msgSendTask = instance.getMessageSendInitializeTask();
+        if (msgSendTask != null) {
+            //设置连接状态为失败
+            msgSendTask.getConnected().set(false);
+        }
         //设置可连接状态为true
-        NettyClientStarter.getCanConnect().set(true);
+        NettyClientStarter.getConnectStatusMap().put(remoteAddr, false);
+
         //开始重新连接
-        NettyClientStarter.connectedToServer();
+        NettyClientStarter.connectedToServer(ip, port, protocol);
     }
 
     @Override
@@ -115,5 +124,9 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
 
     public SocketAddress getRemoteAddr() {
         return remoteAddr;
+    }
+
+    public void setProtocol(RpcSerializeProtocol protocol) {
+        this.protocol = protocol;
     }
 }

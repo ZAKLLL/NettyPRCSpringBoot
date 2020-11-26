@@ -39,21 +39,23 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
     private EventLoopGroup eventLoopGroup;
     private InetSocketAddress serverAddress;
     private RpcSerializeProtocol protocol;
+    private String rpcServerLoaderKey;
 
-    private static AtomicBoolean connected = new AtomicBoolean(false);
+    private AtomicBoolean connected = new AtomicBoolean(false);
     //允许重连,重连次数为5
     private int reconnectCnt = 5;
 
-    public MessageSendInitializeTask(EventLoopGroup eventLoopGroup, InetSocketAddress serverAddress, RpcSerializeProtocol protocol) {
+    public MessageSendInitializeTask(EventLoopGroup eventLoopGroup, String host, int port, RpcSerializeProtocol protocol) {
         this.eventLoopGroup = eventLoopGroup;
-        this.serverAddress = serverAddress;
+        this.serverAddress = new InetSocketAddress(host, port);
         this.protocol = protocol;
+        this.rpcServerLoaderKey = host + ":" + port;
     }
 
     @Override
     public Boolean call() {
         //因为有重连情况,所以重连前重置一下,移除handler
-        RpcServerLoader.getInstance().setMessageSendHandler(null);
+        RpcServerLoader.getInstance(rpcServerLoaderKey).removeMessageSendHandler();
         Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
@@ -65,7 +67,9 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
         channelFuture.addListener((ChannelFutureListener) channelFuture1 -> {
             if (channelFuture1.isSuccess()) {
                 MessageSendHandler handler = channelFuture1.channel().pipeline().get(MessageSendHandler.class);
-                RpcServerLoader.getInstance().setMessageSendHandler(handler);
+                //重连时使用
+                handler.setProtocol(protocol);
+                RpcServerLoader.getInstance(rpcServerLoaderKey).setMessageSendHandler(handler);
                 connected.set(true);
             } else if (reconnectCnt > 0) {
                 reconnectCnt--;
@@ -79,7 +83,7 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
         return Boolean.TRUE;
     }
 
-    public static AtomicBoolean getConnected() {
+    public AtomicBoolean getConnected() {
         return connected;
     }
 
