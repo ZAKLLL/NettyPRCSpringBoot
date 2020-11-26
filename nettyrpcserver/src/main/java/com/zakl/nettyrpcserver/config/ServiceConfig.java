@@ -29,7 +29,7 @@ public class ServiceConfig {
     @PostConstruct
     public void init() {
         ApplicationContext ctx = BeanUtils.getApplicationContext();
-        //该方法会注定去加载注入被@Service 注解的Bean(如果对应的Bean没有被注入进去)
+        //该方法会注定去加载注入被@Service 注解的Bean (如果对应的Bean没有被注入进去)
         Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(Service.class);
         Map<String, Object> handlerMap = MessageRecvExecutor.getInstance().getHandlerMap();
         for (String s : serviceBeanMap.keySet()) {

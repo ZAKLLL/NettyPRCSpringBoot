@@ -22,7 +22,6 @@ import com.zakl.nettyrpcserver.jmx.HashModuleMetricsVisitor;
 import com.zakl.nettyrpcserver.jmx.ModuleMetricsHandler;
 import com.zakl.nettyrpcserver.jmx.ThreadPoolMonitorProvider;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.DependsOn;
@@ -39,9 +38,9 @@ import java.util.concurrent.Executors;
  * @since 2016/10/7
  */
 //因为需要ServiceConfig 将Service注入到handlerMap中,所有使用DependsOn强制依赖加载
-@Component(value = NettyRpcRegistry.REGISTRY_BEAN_NAME)
+@Component(value = NettyServerConfig.REGISTRY_BEAN_NAME)
 @DependsOn(ServiceConfig.SERVICE_CONFIG_BEAN_NAME)
-public class NettyRpcRegistry implements DisposableBean {
+public class NettyServerConfig implements DisposableBean {
     public final static String REGISTRY_BEAN_NAME = "nettyRpcRegistry";
     @Value("${netty.rpc.server.ipAddr}")
     private String ipAddr;
@@ -69,8 +68,7 @@ public class NettyRpcRegistry implements DisposableBean {
         }
     }
 
-    @PostConstruct
-    public void init() {
+    public void startNettyServer() {
 
         MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
         ref.setServerAddress(ipAddr, port);
@@ -82,7 +80,6 @@ public class NettyRpcRegistry implements DisposableBean {
             context.refresh();
         }
 
-        //todo 用后台线程运行Netty Server(尚未验证是否影响服务)
         Executors.newSingleThreadExecutor().execute(ref::start);
 
         if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {

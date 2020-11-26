@@ -2,6 +2,8 @@ package com.zakl.nettyrpcclient.config;
 
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpc.common.util.BeanUtils;
+import com.zakl.nettyrpcclient.core.MessageSendExecutor;
+import com.zakl.nettyrpcclient.core.NettyClientStarter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -14,6 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author ZhangJiaKui
@@ -77,16 +82,15 @@ public class ServiceAndPojoConfig {
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) ctx.getAutowireCapableBeanFactory();
         List<String> localInterfaces = getLocalInterfaces();
         if (localInterfaces == null) return;
+        //注册Bean
         for (String name : localInterfaces) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NettyRpcReference.class);
             beanDefinitionBuilder.addPropertyValue("localInterfaceName", name);
             beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", name.replace(localServicePackage, remoteServicePackage));
-            beanDefinitionBuilder.addPropertyValue("ipAddr", remoteIpAddr);
-            beanDefinitionBuilder.addPropertyValue("port", remotePort);
-            beanDefinitionBuilder.addPropertyValue("protocol", RpcSerializeProtocol.valueOf(protocol));
             defaultListableBeanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
         }
 
+        //配置pojo映射
         String[] split = pojoMapping.split(",");
         localToRemotePojoMap = new HashMap<>();
         remoteToLocalPojoMap = new HashMap<>();
@@ -108,6 +112,10 @@ public class ServiceAndPojoConfig {
                 }
             }
         }
+        NettyClientStarter.setRemotePort(remotePort);
+        NettyClientStarter.setRemoteIpAddr(remoteIpAddr);
+        NettyClientStarter.setProtocol(RpcSerializeProtocol.valueOf(protocol));
+        NettyClientStarter.connectedToServer();
     }
 
     //获取对应的远程调用接口

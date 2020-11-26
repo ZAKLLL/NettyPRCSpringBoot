@@ -52,6 +52,8 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
+        //因为有重连情况,所以重连前重置一下,移除handler
+        RpcServerLoader.getInstance().setMessageSendHandler(null);
         Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
