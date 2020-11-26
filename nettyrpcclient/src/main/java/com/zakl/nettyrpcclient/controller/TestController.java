@@ -6,6 +6,7 @@ import com.zakl.nettyrpcclient.pojo.Person;
 import com.zakl.nettyrpcclient.services.AddCalculate;
 import com.zakl.nettyrpcclient.services.CostTimeCalculate;
 import com.zakl.nettyrpcclient.services.PersonManage;
+import com.zakl.nettyrpcclient.services.Test;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +38,12 @@ public class TestController {
     @Autowired
     private PersonManage personManage;
 
+    @Autowired
+    private Test test;
+
     @GetMapping("/add")
     @OperationLog(detail = "costTimeApi", operationType = OperationType.SELECT)
     public int add(int a, int b) {
-        log.info("调用add方法");
-//        TestController testController = (TestController) AopContext.currentProxy();
-//        testController.test("123", 111);
-//        test("123", 111);
-//        return a + b;
         return addCalculate.add(a, b);
     }
 
@@ -54,6 +53,10 @@ public class TestController {
         return costTimeCalculate.calculate().toString();
     }
 
+    @GetMapping("/getmap")
+    public Map<String, List<Integer>> getMap() {
+        return test.mapTest();
+    }
 
     @GetMapping("/p")
     public List<String> p() throws InterruptedException, ExecutionException {
