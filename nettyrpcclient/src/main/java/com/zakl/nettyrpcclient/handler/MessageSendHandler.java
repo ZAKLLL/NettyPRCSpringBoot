@@ -15,6 +15,7 @@
  */
 package com.zakl.nettyrpcclient.handler;
 
+import com.zakl.nettyrpcclient.config.NettyRpcReference;
 import com.zakl.nettyrpcclient.core.MessageCallBack;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
@@ -62,10 +63,12 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
         log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(new Date()) + "==>>>"
                 + "channelInactive");
-        //todo 进行重连
-        super.channelInactive(ctx);
+        log.info("Begin to reConnected to NettyRPCServer");
+        NettyRpcReference.getConnected().set(false);
+        NettyRpcReference.connectedToServer();
     }
 
     @Override

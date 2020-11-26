@@ -41,10 +41,11 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     private String localInterfaceName;
     private String remoteInterfaceName;
-    private String ipAddr;
-    private int port;
-    private RpcSerializeProtocol protocol;
-    private EventBus eventBus = new EventBus();
+    //以下三个变量设置为static,断开重连使用
+    private static String ipAddr;
+    private static Integer port;
+    private static RpcSerializeProtocol protocol;
+    private static EventBus eventBus = new EventBus();
     private static AtomicBoolean connected = new AtomicBoolean(false);
     private static Lock lock = new ReentrantLock();
 
@@ -56,6 +57,13 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     @PostConstruct
     public void init() {
+        connectedToServer();
+    }
+
+    public static void connectedToServer() {
+        if (ipAddr == null || protocol == null || port == null) {
+            throw new NullPointerException();
+        }
         //只进行一次连接操作
         //todo 后期可能更改为服务可连接到不同的rpc服务,满足分布式要求
         if (!connected.get()) {
@@ -69,7 +77,6 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
         ClientStopEventListener listener = new ClientStopEventListener();
         eventBus.register(listener);
     }
-
 
     @Override
     public Object getObject() {

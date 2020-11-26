@@ -63,12 +63,6 @@ public class MessageRecvHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("【" + ctx.channel().id() + "】" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "==>>>"
                 + "channelInactive");
-        //todo 开始执行重连操作,连续进行五次重连
-        int count = 5;
-        while (count > 0) {
-
-        }
-
         super.channelInactive(ctx);
     }
 

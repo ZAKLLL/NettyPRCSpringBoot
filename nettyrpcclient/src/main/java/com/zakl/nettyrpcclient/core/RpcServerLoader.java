@@ -111,8 +111,6 @@ public class RpcServerLoader {
                 t.printStackTrace();
             }
         }, threadPoolExecutor);
-
-//        return; listenableFuture.get();
     }
 
     public void setMessageSendHandler(MessageSendHandler messageInHandler) {
