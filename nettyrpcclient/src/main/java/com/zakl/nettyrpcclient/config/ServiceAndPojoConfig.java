@@ -2,7 +2,6 @@ package com.zakl.nettyrpcclient.config;
 
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpc.common.util.BeanUtils;
-import com.zakl.nettyrpcclient.core.MessageSendExecutor;
 import com.zakl.nettyrpcclient.core.NettyClientStarter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -16,14 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author ZhangJiaKui
  * @classname ServiceConfig
- * @description 动态注入接口，使用动态代理的方式进行远程调用
+ * @description 动态注入接口，使用动态代理的方式进行远程调用,并根据配置文件连接到指定Server端
  * @date 11/17/2020 9:57 AM
  */
 @Component
@@ -32,10 +28,14 @@ public class ServiceAndPojoConfig {
 
     private static String localServicePackage;
     private static String remoteServicePackage;
+    //默认指定的远程服务ip和port
     private static String remoteIpAddr;
     private static Integer remotePort;
     private static String protocol;
     private static String pojoMapping;
+
+    //自定义服务对应远程的rpc服务实现
+    private static Map<String, String[]> serviceRemoteAddrMap = new HashMap<>();
 
     //pojo 本地全限定名->远程全限定名
     public static Map<String, String> localToRemotePojoMap;
@@ -74,6 +74,17 @@ public class ServiceAndPojoConfig {
         ServiceAndPojoConfig.pojoMapping = pojoMapping;
     }
 
+    @Value(value = "${netty.rpc.server.service.remoteAddr}")
+    public void setCustomRemoteInfo(String[] customRemoteInfoS) {
+        for (String customRemoteInfo : customRemoteInfoS) {
+            String[] split = customRemoteInfo.split(":");
+            //serviceName:ip:port:protocol
+            if (split.length != 4) {
+                continue;
+            }
+            serviceRemoteAddrMap.put(split[0], split);
+        }
+    }
 
     //动态注入bean到context中
     @PostConstruct
@@ -87,10 +98,28 @@ public class ServiceAndPojoConfig {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NettyRpcReference.class);
             beanDefinitionBuilder.addPropertyValue("localInterfaceName", name);
             beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", name.replace(localServicePackage, remoteServicePackage));
+            if (serviceRemoteAddrMap.containsKey(name)) {
+                //使用自定义的远程服务
+                String[] cusRemoteServerInfo = serviceRemoteAddrMap.get(name);
+                String cusIp = cusRemoteServerInfo[1];
+                int cusPort = Integer.parseInt(cusRemoteServerInfo[2]);
+                String cusProtocol = cusRemoteServerInfo[3];
+                beanDefinitionBuilder.addPropertyValue("remoteIp", cusIp);
+                beanDefinitionBuilder.addPropertyValue("remotePort", cusPort);
+                NettyClientStarter.connectedToServer(cusIp, cusPort, RpcSerializeProtocol.valueOf(cusProtocol));
+            } else {
+                beanDefinitionBuilder.addPropertyValue("remoteIp", remoteIpAddr);
+                beanDefinitionBuilder.addPropertyValue("remotePort", remotePort);
+            }
             defaultListableBeanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
         }
-
+        //使用默认的ip+port+protocol启动一次
+        NettyClientStarter.connectedToServer(remoteIpAddr, remotePort, RpcSerializeProtocol.valueOf(protocol));
         //配置pojo映射
+        initPojoMappingMap();
+    }
+
+    public void initPojoMappingMap() {
         String[] split = pojoMapping.split(",");
         localToRemotePojoMap = new HashMap<>();
         remoteToLocalPojoMap = new HashMap<>();
@@ -112,10 +141,6 @@ public class ServiceAndPojoConfig {
                 }
             }
         }
-        NettyClientStarter.setRemotePort(remotePort);
-        NettyClientStarter.setRemoteIpAddr(remoteIpAddr);
-        NettyClientStarter.setProtocol(RpcSerializeProtocol.valueOf(protocol));
-        NettyClientStarter.connectedToServer();
     }
 
     //获取对应的远程调用接口

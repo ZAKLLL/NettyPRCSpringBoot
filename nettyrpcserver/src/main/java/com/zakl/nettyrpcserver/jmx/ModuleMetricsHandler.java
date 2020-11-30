@@ -46,7 +46,7 @@ import static com.zakl.nettyrpcserver.jmx.ThreadPoolMonitorProvider.DELIMITER;
  */
 public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
     public final static String MBEAN_NAME = "com.zakl.nettyrpcserver.jmx:type=ModuleMetricsHandler";
-    public final static int MODULE_METRICS_JMX_PORT = 1098;
+    public static int MODULE_METRICS_JMX_PORT = 1098;
     private String moduleMetricsJmxUrl = "";
     private Semaphore semaphore = new Semaphore(0);
     private SemaphoreWrapper semaphoreWrapper = new SemaphoreWrapper(semaphore);
@@ -90,13 +90,11 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
             break;
         }
 
-        if (visitor != null) {
-            return visitor;
-        } else {
+        if (visitor == null) {
             visitor = new ModuleMetricsVisitor(module, method);
             addModuleMetricsVisitor(visitor);
-            return visitor;
         }
+        return visitor;
     }
 
     public void start() {
@@ -144,11 +142,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
             while (!executor.isTerminated()) {
 
             }
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        } catch (InstanceNotFoundException e) {
-            e.printStackTrace();
-        } catch (MBeanRegistrationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -180,6 +174,14 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
 
     public void setLatch(CountDownLatch latch) {
         this.latch = latch;
+    }
+
+    public static int getModuleMetricsJmxPort() {
+        return MODULE_METRICS_JMX_PORT;
+    }
+
+    public static void setModuleMetricsJmxPort(int moduleMetricsJmxPort) {
+        MODULE_METRICS_JMX_PORT = moduleMetricsJmxPort;
     }
 }
 

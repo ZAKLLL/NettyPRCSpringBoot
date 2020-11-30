@@ -58,12 +58,20 @@ public class TestController {
         return test.mapTest();
     }
 
+    @GetMapping("/p2")
+    public String p2() {
+        Person person = new Person();
+        person.setName("123");
+        return personManage.queryP(person, 1).toString();
+    }
+
+
     @GetMapping("/p")
     public List<String> p() throws InterruptedException, ExecutionException {
         List<String> ret = new ArrayList<>();
         List<FutureTask> futureTasks = new ArrayList<>();
-        CountDownLatch countDownLatch = new CountDownLatch(10000);
-        IntStream.range(0, 10000).forEach(i -> {
+        CountDownLatch countDownLatch = new CountDownLatch(10);
+        IntStream.range(0, 10).forEach(i -> {
             Callable<Person> callable = () -> {
                 System.out.println("线程" + i + "开始工作");
                 countDownLatch.countDown();

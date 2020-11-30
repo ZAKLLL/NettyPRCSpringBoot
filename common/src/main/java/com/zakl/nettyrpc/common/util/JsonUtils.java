@@ -23,7 +23,7 @@ public class JsonUtils {
         unBoxTypeMap.put("long", "java.lang.Long");
         unBoxTypeMap.put("double", "java.lang.Double");
         unBoxTypeMap.put("float", "java.lang.Float");
-        unBoxTypeMap.put("bool", "java.lang.Boolean");
+        unBoxTypeMap.put("boolean", "java.lang.Boolean");
     }
 
     public static Object[] jsonsToObjects(String[] jsons, String[] types) throws ClassNotFoundException {

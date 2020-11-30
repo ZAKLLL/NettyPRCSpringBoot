@@ -64,18 +64,19 @@ public class ThreadPoolMonitorProvider {
         return new RmiRegistryFactoryBean();
     }
 
-    @Bean
-    @DependsOn("registry")
-    public ConnectorServerFactoryBean connectorServer() throws MalformedObjectNameException {
-        MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
-        String ipAddr = StringUtils.isNotEmpty(ref.getServerAddress()) ? StringUtils.substringBeforeLast(ref.getServerAddress(), DELIMITER) : "localhost";
-        url = "service:jmx:rmi://" + ipAddr + "/jndi/rmi://" + ipAddr + ":1099/nettyrpcstatus";
-        System.out.println("NettyRPC JMX MonitorURL : [" + url + "]");
-        ConnectorServerFactoryBean connectorServerFactoryBean = new ConnectorServerFactoryBean();
-        connectorServerFactoryBean.setObjectName("connector:name=rmi");
-        connectorServerFactoryBean.setServiceUrl(url);
-        return connectorServerFactoryBean;
-    }
+    //todo 暂未使用,先行放行
+//    @Bean
+//    @DependsOn("registry")
+//    public ConnectorServerFactoryBean connectorServer() throws MalformedObjectNameException {
+//        MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
+//        String ipAddr = StringUtils.isNotEmpty(ref.getServerAddress()) ? StringUtils.substringBeforeLast(ref.getServerAddress(), DELIMITER) : "localhost";
+//        url = "service:jmx:rmi://" + ipAddr + "/jndi/rmi://" + ipAddr + ":1099/nettyrpcstatus";
+//        System.out.println("NettyRPC JMX MonitorURL : [" + url + "]");
+//        ConnectorServerFactoryBean connectorServerFactoryBean = new ConnectorServerFactoryBean();
+//        connectorServerFactoryBean.setObjectName("connector:name=rmi");
+//        connectorServerFactoryBean.setServiceUrl(url);
+//        return connectorServerFactoryBean;
+//    }
 
     public static void monitor(ThreadPoolStatus status) throws IOException, MalformedObjectNameException, ReflectionException, MBeanException, InstanceNotFoundException {
         MBeanServerConnectionFactoryBean mBeanServerConnectionFactoryBean = new MBeanServerConnectionFactoryBean();

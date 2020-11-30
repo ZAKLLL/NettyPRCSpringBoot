@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcserver.netty.recvtask;
 
 
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
+import com.zakl.nettyrpcserver.netty.recvtask.HashMessageRecvInitializeTask;
+import com.zakl.nettyrpcserver.netty.recvtask.MessageRecvInitializeTask;
+import com.zakl.nettyrpcserver.netty.recvtask.MessageRecvInitializeTaskAdapter;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:RecvInitializeTaskFacade.java
  * @description:RecvInitializeTaskFacade功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -34,7 +37,6 @@ public class RecvInitializeTaskFacade {
     private MessageRequest request;
     private MessageResponse response;
     private Map<String, Object> handlerMap;
-    private boolean isMetrics = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT;
     private boolean jmxMetricsHash = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT;
 
     public RecvInitializeTaskFacade(MessageRequest request, MessageResponse response, Map<String, Object> handlerMap) {
@@ -44,11 +46,8 @@ public class RecvInitializeTaskFacade {
     }
 
     public Callable<Boolean> getTask() {
-        return isMetrics ? getMetricsTask() : new MessageRecvInitializeTaskAdapter(request, response, handlerMap);
-    }
-
-    private Callable<Boolean> getMetricsTask() {
         return jmxMetricsHash ? new HashMessageRecvInitializeTask(request, response, handlerMap) : new MessageRecvInitializeTask(request, response, handlerMap);
     }
+
 }
 

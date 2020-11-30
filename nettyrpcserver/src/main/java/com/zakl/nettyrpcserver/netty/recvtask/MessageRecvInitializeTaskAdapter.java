@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcserver.netty.recvtask;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
+import com.zakl.nettyrpcserver.netty.recvtask.AbstractMessageRecvInitializeTask;
 
 import java.util.Map;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
  * @filename:MessageRecvInitializeTaskAdapter.java
- * @description:MessageRecvInitializeTaskAdapter功能模块
+ * @description: 数据处理调用适配器
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/10/13
  */

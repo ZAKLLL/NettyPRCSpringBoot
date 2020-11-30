@@ -25,6 +25,7 @@ import com.zakl.nettyrpcserver.compiler.AccessAdaptiveProvider;
 import com.zakl.nettyrpcserver.jmx.webmetrics.AbilityDetailProvider;
 import com.zakl.nettyrpcserver.jmx.ModuleMetricsHandler;
 import com.zakl.nettyrpcserver.jmx.resolver.ApiEchoResolver;
+import com.zakl.nettyrpcserver.netty.channelconfig.MessageRecvChannelInitializer;
 import com.zakl.nettyrpcserver.parallel.RpcThreadPool;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -47,8 +48,8 @@ public class MessageRecvExecutor {
     private String serverAddress;
     private int serverPort;
     private int echoApiPort;
-    private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
-    private static final String DELIMITER = RpcSystemConfig.DELIMITER;
+    private boolean enableJmxSupport;
+    private RpcSerializeProtocol serializeProtocol;
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
     private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS;
@@ -107,14 +108,15 @@ public class MessageRecvExecutor {
 
 
             ChannelFuture future;
-            future = bootstrap.bind(serverAddress, serverPort).sync();
+            future = bootstrap.bind(serverPort).sync();
 
             if (future.isSuccess()) {
                 ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
                 future.addListener((ChannelFutureListener) future1 -> {
                     ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
                     completionService.submit(new ApiEchoResolver(serverAddress, echoApiPort));
-                    System.out.printf("Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", serverAddress, serverPort, serializeProtocol, ModuleMetricsHandler.getStartTime(), (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
+                    System.out.printf("Netty RPC Server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n", serverAddress, serverPort, serializeProtocol, ModuleMetricsHandler.getStartTime(), (enableJmxSupport ? "open" : "close"))
+                    ;
                 });
                 future.channel().closeFuture().sync().addListener(i -> executor.shutdown());
             }
@@ -165,5 +167,13 @@ public class MessageRecvExecutor {
 
     public void setEchoApiPort(int echoApiPort) {
         this.echoApiPort = echoApiPort;
+    }
+
+    public boolean isEnableJmxSupport() {
+        return enableJmxSupport;
+    }
+
+    public void setEnableJmxSupport(boolean enableJmxSupport) {
+        this.enableJmxSupport = enableJmxSupport;
     }
 }

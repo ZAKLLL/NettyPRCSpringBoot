@@ -17,6 +17,7 @@ package com.zakl.nettyrpcclient.core;
 
 import com.google.common.util.concurrent.*;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
+import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcclient.parallel.RpcThreadPool;
@@ -25,7 +26,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -44,9 +45,6 @@ import java.util.logging.Logger;
 @Slf4j
 public class RpcServerLoader {
 
-    private static volatile RpcServerLoader rpcServerLoader;
-    private static final String DELIMITER = RpcSystemConfig.DELIMITER;
-    private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(PARALLEL);
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
@@ -56,30 +54,32 @@ public class RpcServerLoader {
     private Lock lock = new ReentrantLock();
     private Condition connectStatus = lock.newCondition();
     private Condition handlerStatus = lock.newCondition();
+    private MessageSendInitializeTask messageSendInitializeTask;
+    private static ConcurrentHashMap<String, RpcServerLoader> addressRpcServerLoaderMap = new ConcurrentHashMap<>();
 
     private RpcServerLoader() {
     }
 
-    public static RpcServerLoader getInstance() {
-        if (rpcServerLoader == null) {
-            synchronized (RpcServerLoader.class) {
-                if (rpcServerLoader == null) {
-                    rpcServerLoader = new RpcServerLoader();
-                }
-            }
+
+    public static RpcServerLoader getInstance(String address) {
+        if (!addressRpcServerLoaderMap.containsKey(address)) {
+            addressRpcServerLoaderMap.put(address, new RpcServerLoader());
         }
-        return rpcServerLoader;
+        return addressRpcServerLoaderMap.get(address);
     }
+
+    public static void removeRpcServerLoader(String address) {
+        addressRpcServerLoaderMap.remove(address);
+    }
+
 
     public void load(String host, int port, RpcSerializeProtocol serializeProtocol) {
         if (StringUtils.isEmpty(host) || port <= 0) {
             return;
         }
-
-        final InetSocketAddress remoteAddr = new InetSocketAddress(host, port);
-
-
-        ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(new MessageSendInitializeTask(eventLoopGroup, remoteAddr, serializeProtocol));
+        messageSendInitializeTask = new MessageSendInitializeTask(eventLoopGroup, host, port, serializeProtocol);
+        //不为空的情况,说明是重连,不用再new 一次,浪费资源
+        ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(messageSendInitializeTask);
 
         Futures.addCallback(listenableFuture, new FutureCallback<Boolean>() {
             @Override
@@ -96,9 +96,8 @@ public class RpcServerLoader {
                     }
                     if (result.equals(Boolean.TRUE) && messageSendHandler != null) {
                         connectStatus.signalAll();
+                        System.out.printf("Netty RPC Client start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
                     }
-                    System.out.printf("Netty RPC Client start success!\nip:%s\nport:%d\nprotocol:%s\n\n", host, port, serializeProtocol);
-
                 } catch (InterruptedException ex) {
                     Logger.getLogger(RpcServerLoader.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
@@ -123,6 +122,10 @@ public class RpcServerLoader {
         }
     }
 
+    public void removeMessageSendHandler() {
+        this.messageSendHandler = null;
+    }
+
     public MessageSendHandler getMessageSendHandler() throws InterruptedException {
         try {
             lock.lock();
@@ -141,7 +144,7 @@ public class RpcServerLoader {
         eventLoopGroup.shutdownGracefully();
     }
 
-    public void setSerializeProtocol(RpcSerializeProtocol serializeProtocol) {
-        this.serializeProtocol = serializeProtocol;
+    public MessageSendInitializeTask getMessageSendInitializeTask() {
+        return messageSendInitializeTask;
     }
 }

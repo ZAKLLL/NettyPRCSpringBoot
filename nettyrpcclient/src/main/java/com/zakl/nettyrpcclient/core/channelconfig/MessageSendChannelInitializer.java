@@ -13,34 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcclient.core.channelconfig;
 
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 
-import java.util.Map;
-
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:MessageRecvChannelInitializer.java
- * @description:MessageRecvChannelInitializer功能模块
+ * @filename:MessageSendChannelInitializer.java
+ * @description:MessageSendChannelInitializer功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class MessageRecvChannelInitializer extends ChannelInitializer<SocketChannel> {
+public class MessageSendChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private RpcSerializeProtocol protocol;
-    private final RpcRecvSerializeFrame frame;
+    private RpcSendSerializeFrame frame = new RpcSendSerializeFrame();
 
-    MessageRecvChannelInitializer buildRpcSerializeProtocol(RpcSerializeProtocol protocol) {
+    public MessageSendChannelInitializer buildRpcSerializeProtocol(RpcSerializeProtocol protocol) {
         this.protocol = protocol;
         return this;
-    }
-
-    MessageRecvChannelInitializer(Map<String, Object> handlerMap) {
-        frame = new RpcRecvSerializeFrame(handlerMap);
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcserver.netty.channelconfig;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
@@ -25,9 +25,9 @@ import io.netty.channel.ChannelPipeline;
 import java.util.Map;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:RpcRecvSerializeFrame.java
- * @description:RpcRecvSerializeFrame功能模块
+ * @description: RPC动态选择序列化协议的模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */

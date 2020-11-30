@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcserver.netty.recvtask;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.util.JsonUtils;

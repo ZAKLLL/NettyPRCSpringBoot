@@ -48,7 +48,7 @@ public class HashModuleMetricsVisitor {
     private void init() {
         Map<String, Object> map = MessageRecvExecutor.getInstance().getHandlerMap();
         ReflectionUtils utils = new ReflectionUtils();
-        Set<String> s = (Set<String>) map.keySet();
+        Set<String> s = map.keySet();
         Iterator<String> iter = s.iterator();
         String key;
         while (iter.hasNext()) {
@@ -56,7 +56,7 @@ public class HashModuleMetricsVisitor {
             try {
                 List<String> list = utils.getClassMethodSignature(Class.forName(key));
                 for (String signature : list) {
-                    List<ModuleMetricsVisitor> visitorList = new ArrayList<ModuleMetricsVisitor>();
+                    List<ModuleMetricsVisitor> visitorList = new ArrayList<>();
                     for (int i = 0; i < RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS; i++) {
                         ModuleMetricsVisitor visitor = new ModuleMetricsVisitor(key, signature);
                         visitor.setHashKey(i);

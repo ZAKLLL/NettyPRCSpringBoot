@@ -31,11 +31,7 @@ import javax.annotation.PostConstruct;
 import java.util.concurrent.Executors;
 
 /**
- * @author tangjie<https: / / github.com / tang-jie>
- * @filename:NettyRpcRegistery.java
- * @description:NettyRpcRegistery功能模块
- * @blogs http://www.cnblogs.com/jietang/
- * @since 2016/10/7
+ * @author zakl
  */
 //因为需要ServiceConfig 将Service注入到handlerMap中,所有使用DependsOn强制依赖加载
 @Component(value = NettyServerConfig.REGISTRY_BEAN_NAME)
@@ -54,6 +50,11 @@ public class NettyServerConfig implements DisposableBean {
     @Value("${netty.rpc.server.echoApiPort}")
     private String echoApiPort;
 
+    @Value("${netty.rpc.server.jmx.enable}")
+    private boolean enableJmxSupport;
+
+    @Value("${netty.rpc.server.jmx.port}")
+    private int jmxPort;
 
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
@@ -74,19 +75,20 @@ public class NettyServerConfig implements DisposableBean {
         ref.setServerAddress(ipAddr, port);
         ref.setEchoApiPort(Integer.parseInt(echoApiPort));
         ref.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
+        ref.setEnableJmxSupport(enableJmxSupport);
 
-        if (RpcSystemConfig.isMonitorServerSupport()) {
-            context.register(ThreadPoolMonitorProvider.class);
-            context.refresh();
-        }
+//        if (RpcSystemConfig.isMonitorServerSupport()) {
+//            context.register(ThreadPoolMonitorProvider.class);
+//            context.refresh();
+//        }
 
         Executors.newSingleThreadExecutor().execute(ref::start);
 
-        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
+        if (enableJmxSupport) {
             HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();
             visitor.signal();
-            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
-            handler.start();
+            ModuleMetricsHandler.setModuleMetricsJmxPort(jmxPort);
+            ModuleMetricsHandler.getInstance().start();
         }
     }
 
@@ -114,13 +116,7 @@ public class NettyServerConfig implements DisposableBean {
         this.echoApiPort = echoApiPort;
     }
 
-    public int getPort() {
-        return port;
-    }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
 }
 
 
