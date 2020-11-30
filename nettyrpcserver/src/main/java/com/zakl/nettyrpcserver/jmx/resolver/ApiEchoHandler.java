@@ -31,7 +31,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:ApiEchoHandler.java
  * @description:ApiEchoHandler功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -77,7 +77,9 @@ public class ApiEchoHandler extends ChannelInboundHandlerAdapter {
         boolean metrics = (req.getUri().contains(METRICS));
         if (SYSTEM_PROPERTY_JMX_METRICS_SUPPORT && metrics) {
             try {
-                content = ModuleMetricsProcessor.getInstance().buildModuleMetrics().getBytes("GBK");
+                ModuleMetricsProcessor instance = ModuleMetricsProcessor.getInstance();
+                String s = instance.buildModuleMetrics();
+                content = s.getBytes("GBK");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

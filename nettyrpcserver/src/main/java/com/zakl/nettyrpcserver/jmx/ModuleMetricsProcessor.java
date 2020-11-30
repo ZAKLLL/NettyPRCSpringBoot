@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:ModuleMetricsProcessor.java
  * @description:ModuleMetricsProcessor功能模块
  * @blogs http://www.cnblogs.com/jietang/
@@ -106,7 +106,7 @@ public class ModuleMetricsProcessor {
                     long invokeFailCount = (Long) (data.get("invokeFailCount"));
                     long invokeFilterCount = (Long) (data.get("invokeFilterCount"));
                     long invokeTimespan = (Long) (data.get("invokeTimespan"));
-                    long invokeMinTimespan = ((Long) (data.get("invokeMinTimespan"))).equals(Long.valueOf(ModuleMetricsVisitor.DEFAULT_INVOKE_MIN_TIMESPAN)) ? Long.valueOf(0L) : (Long) (data.get("invokeMinTimespan"));
+                    long invokeMinTimespan = ((Long) (data.get("invokeMinTimespan"))).equals(ModuleMetricsVisitor.DEFAULT_INVOKE_MIN_TIMESPAN) ? Long.valueOf(0L) : (Long) (data.get("invokeMinTimespan"));
                     long invokeMaxTimespan = (Long) (data.get("invokeMaxTimespan"));
                     String lastStackTraceDetail = (String) (data.get("lastStackTraceDetail"));
                     String lastErrorTime = (String) (data.get("lastErrorTime"));
@@ -128,15 +128,7 @@ public class ModuleMetricsProcessor {
                 }
             }
             metrics.append(TABLE_END);
-        } catch (MBeanException e) {
-            e.printStackTrace();
-        } catch (AttributeNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstanceNotFoundException e) {
-            e.printStackTrace();
-        } catch (ReflectionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
