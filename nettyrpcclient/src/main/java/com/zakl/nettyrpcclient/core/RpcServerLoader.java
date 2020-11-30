@@ -17,6 +17,7 @@ package com.zakl.nettyrpcclient.core;
 
 import com.google.common.util.concurrent.*;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
+import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcclient.parallel.RpcThreadPool;
@@ -25,8 +26,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -46,9 +45,6 @@ import java.util.logging.Logger;
 @Slf4j
 public class RpcServerLoader {
 
-    //    private static volatile RpcServerLoader rpcServerLoader;
-    private static final String DELIMITER = RpcSystemConfig.DELIMITER;
-    private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDKSERIALIZE;
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(PARALLEL);
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
@@ -73,9 +69,7 @@ public class RpcServerLoader {
     }
 
     public static void removeRpcServerLoader(String address) {
-        if (addressRpcServerLoaderMap.containsKey(address)) {
-            addressRpcServerLoaderMap.remove(address);
-        }
+        addressRpcServerLoaderMap.remove(address);
     }
 
 
@@ -84,6 +78,7 @@ public class RpcServerLoader {
             return;
         }
         messageSendInitializeTask = new MessageSendInitializeTask(eventLoopGroup, host, port, serializeProtocol);
+        //不为空的情况,说明是重连,不用再new 一次,浪费资源
         ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(messageSendInitializeTask);
 
         Futures.addCallback(listenableFuture, new FutureCallback<Boolean>() {
@@ -147,10 +142,6 @@ public class RpcServerLoader {
         messageSendHandler.close();
         threadPoolExecutor.shutdown();
         eventLoopGroup.shutdownGracefully();
-    }
-
-    public void setSerializeProtocol(RpcSerializeProtocol serializeProtocol) {
-        this.serializeProtocol = serializeProtocol;
     }
 
     public MessageSendInitializeTask getMessageSendInitializeTask() {

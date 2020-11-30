@@ -19,7 +19,7 @@ import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcclient.core.MessageCallBack;
-import com.zakl.nettyrpcclient.core.MessageSendInitializeTask;
+import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.core.NettyClientStarter;
 import com.zakl.nettyrpcclient.core.RpcServerLoader;
 import io.netty.buffer.Unpooled;
@@ -69,8 +69,6 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
         int port = this.remoteAddr.getPort();
         String remoteAddr = ip + ":" + port;
         //离线后移除
-        this.channel = null;
-        this.remoteAddr = null;
         RpcServerLoader instance = RpcServerLoader.getInstance(remoteAddr);
         MessageSendInitializeTask msgSendTask = instance.getMessageSendInitializeTask();
         if (msgSendTask != null) {

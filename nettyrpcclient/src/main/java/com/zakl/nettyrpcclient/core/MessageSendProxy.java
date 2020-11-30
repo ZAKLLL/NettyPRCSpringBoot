@@ -18,6 +18,7 @@ package com.zakl.nettyrpcclient.core;
 import com.alibaba.fastjson.JSON;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
+import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,7 @@ import java.util.UUID;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
-public class MessageSendProxy<T> extends AbstractInvocationHandler {
+public class MessageSendProxy extends AbstractInvocationHandler {
     private String remoteInterFaceName;
     private String rpcServerLoaderKey;
 

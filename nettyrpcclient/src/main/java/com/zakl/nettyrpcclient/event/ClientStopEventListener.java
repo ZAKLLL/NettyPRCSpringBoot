@@ -16,7 +16,6 @@
 package com.zakl.nettyrpcclient.event;
 
 import com.google.common.eventbus.Subscribe;
-import com.zakl.nettyrpcclient.core.MessageSendExecutor;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
@@ -31,7 +30,8 @@ public class ClientStopEventListener {
     @Subscribe
     public void listen(ClientStopEvent event) {
         lastMessage = event.getMessage();
-        MessageSendExecutor.getInstance().stop();
+        //todo 弃用MessageSendExecutor
+//        MessageSendExecutor.getInstance().stop();
     }
 
     public int getLastMessage() {

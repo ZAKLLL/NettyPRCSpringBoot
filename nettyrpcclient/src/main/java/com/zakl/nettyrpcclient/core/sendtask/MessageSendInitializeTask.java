@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcclient.core;
+package com.zakl.nettyrpcclient.core.sendtask;
 
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
+import com.zakl.nettyrpcclient.core.channelconfig.MessageSendChannelInitializer;
+import com.zakl.nettyrpcclient.core.RpcServerLoader;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import io.netty.bootstrap.Bootstrap;
@@ -87,4 +89,7 @@ public class MessageSendInitializeTask implements Callable<Boolean> {
         return connected;
     }
 
+    public void resetConnectTime() {
+        reconnectCnt = 5;
+    }
 }

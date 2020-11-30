@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcclient.core;
+package com.zakl.nettyrpcclient.core.channelconfig;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;

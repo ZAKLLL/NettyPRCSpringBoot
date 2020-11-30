@@ -60,7 +60,7 @@ public class ModuleMetricsVisitor {
     private long lastErrorTime;
     private int hashKey = 0;
 
-    private Histogram histogram = new Histogram(TimeUnit.MILLISECONDS, new long[]{1, 10, 100, 1000, 10 * 1000, 100 * 1000, 1000 * 1000});
+    private Histogram histogram = new Histogram(TimeUnit.MILLISECONDS, 1, 10, 100, 1000, 10 * 1000, 100 * 1000, 1000 * 1000);
 
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeCount");
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeSuccCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeSuccCount");

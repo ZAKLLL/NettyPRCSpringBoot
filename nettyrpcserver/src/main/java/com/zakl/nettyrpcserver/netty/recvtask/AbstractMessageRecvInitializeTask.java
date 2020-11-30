@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcserver.netty.recvtask;
 
 import com.alibaba.fastjson.JSON;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
@@ -63,7 +63,6 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
             Object result = reflect(request);
             boolean isInvokeSucc = (!returnNotNull || result != null);
             if (isInvokeSucc) {
-                //todo 添加json返回
                 response.setResponseType(result.getClass().getCanonicalName());
                 response.setJsonResult(JSON.toJSON(result).toString());
                 response.setError("");
@@ -92,7 +91,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
         ProxyFactory weaver = new ProxyFactory(new MethodInvoker());
         NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
         advisor.setMappedName(METHOD_MAPPED_NAME);
-        //设置AOP 方法
+        //设置AOP 方法,普通Filter
         advisor.setAdvice(new MethodProxyAdvisor(handlerMap));
         weaver.addAdvisor(advisor);
         MethodInvoker mi = (MethodInvoker) weaver.getProxy();

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcserver.netty;
+package com.zakl.nettyrpcserver.netty.recvtask;
 
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.util.JsonUtils;
@@ -25,7 +25,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,7 +34,6 @@ import java.util.Map;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/7/27
  */
-//过滤器调用
 public class MethodProxyAdvisor implements MethodInterceptor {
     private Map<String, Object> handlerMap;
     private boolean returnNotNull = true;
@@ -75,6 +73,7 @@ public class MethodProxyAdvisor implements MethodInterceptor {
             ServiceFilterBinder processors = (ServiceFilterBinder) handlerBean;
             if (processors.getFilter() != null) {
                 Filter filter = processors.getFilter();
+                //todo 优化
                 Object[] args = JsonUtils.jsonsToObjects(parametersInJson, parameterTypesInString);
                 Class<?>[] parameterTypes = ClassUtils.toClass(args);
                 Method method = MethodUtils.getMatchingAccessibleMethod(processors.getObject().getClass(), methodName, parameterTypes);

@@ -19,7 +19,6 @@ import com.zakl.nettyrpc.common.serialize.kryo.KryoCodecUtil;
 import com.zakl.nettyrpc.common.serialize.kryo.KryoDecoder;
 import com.zakl.nettyrpc.common.serialize.kryo.KryoEncoder;
 import com.zakl.nettyrpc.common.serialize.kryo.KryoPoolFactory;
-import com.zakl.nettyrpcserver.netty.MessageRecvHandler;
 import io.netty.channel.ChannelPipeline;
 
 import java.util.Map;

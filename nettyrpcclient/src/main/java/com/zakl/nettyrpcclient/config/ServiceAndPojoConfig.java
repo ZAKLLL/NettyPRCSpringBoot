@@ -2,7 +2,6 @@ package com.zakl.nettyrpcclient.config;
 
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpc.common.util.BeanUtils;
-import com.zakl.nettyrpcclient.core.MessageSendExecutor;
 import com.zakl.nettyrpcclient.core.NettyClientStarter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -16,14 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author ZhangJiaKui
  * @classname ServiceConfig
- * @description 动态注入接口，使用动态代理的方式进行远程调用
+ * @description 动态注入接口，使用动态代理的方式进行远程调用,并根据配置文件连接到指定Server端
  * @date 11/17/2020 9:57 AM
  */
 @Component

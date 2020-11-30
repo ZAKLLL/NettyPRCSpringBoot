@@ -24,7 +24,7 @@ public class NettyClientStarter {
         if (!connectStatusMap.getOrDefault(remoteAddr, false)) {
             lock.lock();
             if (!connectStatusMap.getOrDefault(remoteAddr, false)) {
-                MessageSendExecutor.getInstance().setRpcServerLoader(ip, port, protocol);
+                RpcServerLoader.getInstance(ip + ":" + port).load(ip, port, protocol);
                 connectStatusMap.put(remoteAddr, true);
                 lock.unlock();
             }

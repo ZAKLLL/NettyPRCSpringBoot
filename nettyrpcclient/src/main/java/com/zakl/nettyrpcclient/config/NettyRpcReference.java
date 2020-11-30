@@ -16,17 +16,14 @@
 package com.zakl.nettyrpcclient.config;
 
 import com.google.common.eventbus.EventBus;
-import com.zakl.nettyrpcclient.core.MessageSendExecutor;
+import com.google.common.reflect.Reflection;
+import com.zakl.nettyrpcclient.core.MessageSendProxy;
 import com.zakl.nettyrpcclient.event.ClientStopEvent;
 import com.zakl.nettyrpcclient.event.ClientStopEventListener;
-import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
 import javax.annotation.PostConstruct;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -59,7 +56,8 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     @Override
     public Object getObject() {
-        return MessageSendExecutor.getInstance().execute(getObjectType(), remoteInterfaceName, remoteIp, remotePort);
+//        return MessageSendExecutor.getInstance().execute(getObjectType(), remoteInterfaceName, remoteIp, remotePort);
+        return Reflection.newProxy(getObjectType(), new MessageSendProxy(remoteInterfaceName, remoteIp, remotePort));
     }
 
     @Override
