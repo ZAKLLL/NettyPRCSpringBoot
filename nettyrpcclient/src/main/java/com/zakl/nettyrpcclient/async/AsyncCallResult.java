@@ -38,7 +38,7 @@ public class AsyncCallResult {
     private Future future;
     private Long timeout;
 
-    public AsyncCallResult(Class returnClass, Future future, Long timeout) {
+    public <R> AsyncCallResult(Class<R> returnClass, Future future, Long timeout) {
         this.returnClass = returnClass;
         this.future = future;
         this.timeout = timeout;
@@ -69,8 +69,8 @@ public class AsyncCallResult {
         }
     }
 
-    public Object getResult() {
-        Class proxyClass = AsyncProxyCache.get(returnClass.getName());
+    public <R> R getResult() {
+        Class<R> proxyClass = AsyncProxyCache.get(returnClass.getName());
         if (proxyClass == null) {
             Enhancer enhancer = new Enhancer();
             if (returnClass.isInterface()) {

@@ -20,20 +20,20 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 
 /**
- * @author tangjie<https://github.com/tang-jie>
+ * @author tangjie<https: / / github.com / tang-jie>
  * @filename:AsyncProxyCache.java
  * @description:AsyncProxyCache功能模块
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2017/3/22
  */
-public class AsyncProxyCache {
-    private static Map<String, Class> cache = Maps.newConcurrentMap();
+public  class  AsyncProxyCache {
+    private static final Map<String, Class> cache = Maps.newConcurrentMap();
 
     public static Class get(String key) {
         return cache.get(key);
     }
 
-    public static void save(String key, Class proxyClass) {
+    public static <R> void save(String key, Class<R> proxyClass) {
         if (!cache.containsKey(key)) {
             synchronized (cache) {
                 if (!cache.containsKey(key)) {

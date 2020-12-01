@@ -30,7 +30,7 @@ import java.util.concurrent.Future;
  * @since 2017/3/22
  */
 public class AsyncCallObjectInterceptor implements MethodInterceptor {
-    private static final String NETTYRPCSTATUS = "_getStatus";
+    private static final String NETTYRPC_STATUS = "_getStatus";
     private Future future;
 
     public AsyncCallObjectInterceptor(Future future) {
@@ -39,7 +39,7 @@ public class AsyncCallObjectInterceptor implements MethodInterceptor {
 
     @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) {
-        if (NETTYRPCSTATUS.equals(method.getName())) {
+        if (NETTYRPC_STATUS.equals(method.getName())) {
             return getStatus();
         }
         return null;
@@ -53,7 +53,7 @@ public class AsyncCallObjectInterceptor implements MethodInterceptor {
             endTime = ((AsyncFuture) future).getEndTime();
         }
 
-        CallStatus status = null;
+        CallStatus status;
 
         if (future.isCancelled()) {
             status = CallStatus.TIMEOUT;

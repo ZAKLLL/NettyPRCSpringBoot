@@ -58,14 +58,14 @@ public class AsyncInvoker {
         } else return null;
     }
 
-    public <R> R submit(final AsyncCallback<R> callback, Class<?> returnClass) {
+    public <R> R submit(final AsyncCallback<R> callback, Class<R> returnClass) {
         R ret = intercept(callback, returnClass);
         if (ret != null) {
             return ret;
         }
         Future<R> future = submit(callback::call);
         AsyncCallResult result = new AsyncCallResult(returnClass, future, RpcSystemConfig.SYSTEM_PROPERTY_ASYNC_MESSAGE_CALLBACK_TIMEOUT);
-        return (R) result.getResult();
+        return result.getResult();
     }
 }
 

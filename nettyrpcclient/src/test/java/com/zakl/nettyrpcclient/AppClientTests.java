@@ -32,7 +32,8 @@ class AppClientTests {
         //todo 是否能使用lambda表达式
         CostTime elapse0 = invoker.submit(costTimeCalculate::calculate, CostTime.class);
 
-        Integer elapse1 = invoker.submit(() -> addCalculate.add(13, 23),Integer.class);
+        Integer elapse1 = invoker.submit(() -> addCalculate.add(13, 23), Integer.class);
+
 
 //        CostTime elapse1 = invoker.submit(calculate::calculate);
 //
@@ -40,6 +41,7 @@ class AppClientTests {
 
         System.out.println("1 async nettyrpc call:[" + "result:" + elapse0 + ", status:[" + ((AsyncCallObject) elapse0)._getStatus() + "]");
 //        System.out.println("2 async nettyrpc call:[" + "result:" + elapse1 + ", status:[" + ((AsyncCallObject) elapse1)._getStatus() + "]");
+        System.out.println("2 async nettyrpc call:[" + "result:" + elapse1);
 //        System.out.println("3 async nettyrpc call:[" + "result:" + elapse2 + ", status:[" + ((AsyncCallObject) elapse2)._getStatus() + "]");
 
         end = System.currentTimeMillis();
