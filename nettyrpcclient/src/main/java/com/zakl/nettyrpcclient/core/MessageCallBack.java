@@ -58,7 +58,7 @@ public class MessageCallBack {
                     if (this.response.getError().isEmpty()) {
                         String localPojoName = ServiceAndPojoConfig.getLocalPojo(this.response.getResponseType());
                         String jsonResult = this.response.getJsonResult();
-                        return JSON.parseObject(jsonResult, this.getClass().getClassLoader().loadClass(localPojoName));
+                        return jsonResult == null ? null : JSON.parseObject(jsonResult, this.getClass().getClassLoader().loadClass(localPojoName));
                     } else {
                         throw new InvokeModuleException(this.response.getError());
                     }
