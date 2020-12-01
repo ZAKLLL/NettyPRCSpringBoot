@@ -25,5 +25,7 @@ package com.zakl.nettyrpcclient.services;
 public interface AddCalculate {
     //两数相加
     int add(int a, int b);
+
+    int add2(int a, int b);
 }
 

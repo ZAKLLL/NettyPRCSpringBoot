@@ -17,6 +17,7 @@ package com.zakl.nettyrpcserver.services.impl;
 
 
 import com.zakl.nettyrpcserver.services.AddCalculate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,7 +31,24 @@ import org.springframework.stereotype.Service;
 public class AddCalculateImpl implements AddCalculate {
     //两数相加
     @Override
+    @Cacheable(value = "addCache", key = "targetClass + methodName +#p0+#p1")
     public int add(int a, int b) {
+
+        System.out.println("add方法调用");
+        if (a == 100) {
+//            return ((AddCalculate) BeanUtils.getBean(AddCalculate.SERVICE_BEAN_NAME)).add2(a, b);
+//            return add2(a, b);
+            return this.add2(a, b);
+        }
+
+        return a + b;
+    }
+
+    @Override
+    @Cacheable(value = "add2Cache", key = "targetClass + methodName +#p0+#p1")
+    public int add2(int a, int b) {
+        System.out.println("add2方法调用");
         return a + b;
     }
 }
+

@@ -42,9 +42,16 @@ public class TestController {
     private Test test;
 
     @GetMapping("/add")
-    @OperationLog(detail = "costTimeApi", operationType = OperationType.SELECT)
+    @OperationLog(detail = "add", operationType = OperationType.SELECT)
     public int add(int a, int b) {
+
         return addCalculate.add(a, b);
+    }
+
+    @GetMapping("/add2")
+    @OperationLog(detail = "add2", operationType = OperationType.SELECT)
+    public int add2(int a, int b) {
+        return addCalculate.add2(a, b);
     }
 
     @GetMapping("/costTime")
