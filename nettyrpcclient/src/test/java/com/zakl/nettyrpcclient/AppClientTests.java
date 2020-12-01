@@ -16,7 +16,11 @@ import org.springframework.context.annotation.ComponentScan;
 class AppClientTests {
 
     @Autowired
-    private CostTimeCalculate calculate;
+    private CostTimeCalculate costTimeCalculate;
+
+    @Autowired
+    private AddCalculate addCalculate;
+
 
     @Test
     void contextLoads() {
@@ -26,12 +30,9 @@ class AppClientTests {
         AsyncInvoker invoker = new AsyncInvoker();
 
         //todo 是否能使用lambda表达式
-        CostTime elapse0 = invoker.submit(new AsyncCallback<CostTime>() {
-            @Override
-            public CostTime call() {
-                return calculate.calculate();
-            }
-        });
+        CostTime elapse0 = invoker.submit(costTimeCalculate::calculate, CostTime.class);
+
+        Integer elapse1 = invoker.submit(() -> addCalculate.add(13, 23),Integer.class);
 
 //        CostTime elapse1 = invoker.submit(calculate::calculate);
 //

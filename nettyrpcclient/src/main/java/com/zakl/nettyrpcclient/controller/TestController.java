@@ -103,4 +103,11 @@ public class TestController {
         return ret;
     }
 
+
+    @GetMapping("/save")
+    public String save() {
+        test.save();
+        return "success";
+    }
+
 }

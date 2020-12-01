@@ -13,4 +13,6 @@ public interface Test {
     String SERVICE_BEAN_NAME="test";
 
     Map<String, List<Integer>> mapTest();
+
+    void save();
 }

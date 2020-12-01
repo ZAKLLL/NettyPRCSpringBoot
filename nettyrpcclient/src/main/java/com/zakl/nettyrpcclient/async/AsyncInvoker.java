@@ -19,6 +19,7 @@ package com.zakl.nettyrpcclient.async;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.exception.AsyncCallException;
 import com.zakl.nettyrpcclient.parallel.RpcThreadPool;
+import com.zakl.nettyrpcclient.pojo.CostTime;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -35,21 +36,10 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @since 2017/3/22
  */
 public class AsyncInvoker {
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) RpcThreadPool.getExecutor(RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS, RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS);
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) RpcThreadPool.getExecutor(RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS, RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS);
 
-    public <R> R submit(final AsyncCallback<R> callback) {
-        Type type = callback.getClass().getGenericInterfaces()[0];
-        if (type instanceof ParameterizedType) {
-            Class returnClass = ReflectionUtils.getGenericClass((ParameterizedType) type, 0);
-            return intercept(callback, returnClass);
-        } else {
-            throw new AsyncCallException("NettyRPC AsyncCallback must be parameterized type!");
-        }
-    }
-
-
-    private <T> AsyncFuture<T> submit(Callable<T> task) {
-        AsyncFuture future = new AsyncFuture<T>(task);
+    private <R> AsyncFuture<R> submit(Callable<R> task) {
+        AsyncFuture<R> future = new AsyncFuture<>(task);
         executor.submit(future);
         return future;
     }
@@ -65,23 +55,17 @@ public class AsyncInvoker {
             return callback.call();
         } else if (returnClass == Object.class) {
             return callback.call();
-        } else {
-            return submit(callback, returnClass);
-        }
+        } else return null;
     }
 
-    private <R> R submit(final AsyncCallback<R> callback, Class<?> returnClass) {
-        Future future = submit(new Callable() {
-            @Override
-            public R call() throws Exception {
-                return callback.call();
-            }
-        });
-
+    public <R> R submit(final AsyncCallback<R> callback, Class<?> returnClass) {
+        R ret = intercept(callback, returnClass);
+        if (ret != null) {
+            return ret;
+        }
+        Future<R> future = submit(callback::call);
         AsyncCallResult result = new AsyncCallResult(returnClass, future, RpcSystemConfig.SYSTEM_PROPERTY_ASYNC_MESSAGE_CALLBACK_TIMEOUT);
-        R asyncProxy = (R) result.getResult();
-
-        return asyncProxy;
+        return (R) result.getResult();
     }
 }
 

@@ -28,4 +28,9 @@ public class TestImpl implements Test {
         map.put("Hello", list);
         return map;
     }
+
+    @Override
+    public void save() {
+        System.out.println("save.....");
+    }
 }

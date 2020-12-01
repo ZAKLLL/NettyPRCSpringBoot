@@ -11,4 +11,6 @@ import java.util.Map;
  */
 public interface Test {
     Map<String, List<Integer>> mapTest();
+
+    void save();
 }
