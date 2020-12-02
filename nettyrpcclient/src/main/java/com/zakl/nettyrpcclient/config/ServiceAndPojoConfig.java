@@ -166,7 +166,10 @@ public class ServiceAndPojoConfig {
             String type = url.getProtocol();
             if (type.equals("file")) {
                 fileNames.addAll(getAllClassNameByFile(new File(url.getPath()), childPackage, packageName));
+            } else if (type.equals("jar")) {
+                //todo fix 打包成jar后无法获取类名
             }
+
         }
         return fileNames;
     }
@@ -191,6 +194,46 @@ public class ServiceAndPojoConfig {
         }
         return serviceLocationList;
     }
+
+//    private static List<String> getClassNameByJar(String jarPath, boolean childPackage) throws UnsupportedEncodingException {
+//        List<String> myClassName = new ArrayList<String>();
+//        String[] jarInfo = jarPath.split("!");
+//        String jarFilePath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
+//        jarFilePath = UrlDecode.getURLDecode(jarFilePath);
+//        String packagePath = jarInfo[1].substring(1);
+//        try {
+//            JarFile jarFile = new JarFile(jarFilePath);
+//            Enumeration<JarEntry> entrys = jarFile.entries();
+//            while (entrys.hasMoreElements()) {
+//                JarEntry jarEntry = entrys.nextElement();
+//                String entryName = jarEntry.getName();
+//                if (entryName.endsWith(".class")) {
+//                    if (childPackage) {
+//                        if (entryName.startsWith(packagePath)) {
+//                            entryName = entryName.replace("/", ".").substring(0, entryName.lastIndexOf("."));
+//                            myClassName.add(entryName);
+//                        }
+//                    } else {
+//                        int index = entryName.lastIndexOf("/");
+//                        String myPackagePath;
+//                        if (index != -1) {
+//                            myPackagePath = entryName.substring(0, index);
+//                        } else {
+//                            myPackagePath = entryName;
+//                        }
+//                        if (myPackagePath.equals(packagePath)) {
+//                            entryName = entryName.replace("/", ".").substring(0, entryName.lastIndexOf("."));
+//                            myClassName.add(entryName);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            //SystemLog.Log(LogType.systemInfo, e.getMessage(), e);
+//        }
+//        return myClassName;
+//    }
+
 
     public static String getLocalPojo(String responsePojoName) {
         return remoteToLocalPojoMap.getOrDefault(responsePojoName, responsePojoName);
