@@ -16,6 +16,7 @@
 package com.zakl.nettyrpcclient.core;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.annotations.Beta;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
 import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Newland Group Holding Limited
+ * Copyright (C) 2017 Newland Group Holding Limited
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zakl.nettyrpcclient.services;
+package com.zakl.nettyrpcclient.async;
+
+
+import org.springframework.cglib.proxy.CallbackFilter;
+
+import java.lang.reflect.Method;
 
 /**
  * @author tangjie<https://github.com/tang-jie>
- * @filename:Calculate.java
- * @description:Calculate功能模块
+ * @filename:AsyncCallFilter.java
+ * @description:AsyncCallFilter功能模块
  * @blogs http://www.cnblogs.com/jietang/
- * @since 2016/10/7
+ * @since 2017/3/22
  */
-public interface AddCalculate {
-    //两数相加
-    int add(int a, int b);
-
-    int add2(int a, int b);
+public class AsyncCallFilter implements CallbackFilter {
+    @Override
+    public int accept(Method method) {
+        return AsyncCallObject.class.isAssignableFrom(method.getDeclaringClass()) ? 1 : 0;
+    }
 }
 

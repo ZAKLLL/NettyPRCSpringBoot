@@ -56,7 +56,6 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     @Override
     public Object getObject() {
-//        return MessageSendExecutor.getInstance().execute(getObjectType(), remoteInterfaceName, remoteIp, remotePort);
         return Reflection.newProxy(getObjectType(), new MessageSendProxy(remoteInterfaceName, remoteIp, remotePort));
     }
 

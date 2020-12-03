@@ -35,6 +35,12 @@
             <groupId>com.zakl.nettyprcspringboot</groupId>
             <artifactId>log</artifactId>
             <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

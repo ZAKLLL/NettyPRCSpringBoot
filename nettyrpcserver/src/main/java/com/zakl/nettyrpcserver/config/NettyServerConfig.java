@@ -56,7 +56,7 @@ public class NettyServerConfig implements DisposableBean {
     @Value("${netty.rpc.server.jmx.port}")
     private int jmxPort;
 
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+//    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
 
     @Override
@@ -76,6 +76,7 @@ public class NettyServerConfig implements DisposableBean {
         ref.setEchoApiPort(Integer.parseInt(echoApiPort));
         ref.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
         ref.setEnableJmxSupport(enableJmxSupport);
+        RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = enableJmxSupport;
 
 //        if (RpcSystemConfig.isMonitorServerSupport()) {
 //            context.register(ThreadPoolMonitorProvider.class);

@@ -63,8 +63,11 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
             Object result = reflect(request);
             boolean isInvokeSucc = (!returnNotNull || result != null);
             if (isInvokeSucc) {
-                response.setResponseType(result.getClass().getCanonicalName());
-                response.setJsonResult(JSON.toJSON(result).toString());
+                //有可能是 返回了null,或者void返回
+                if (result != null) {
+                    response.setResponseType(result.getClass().getCanonicalName());
+                    response.setJsonResult(JSON.toJSON(result).toString());
+                }
                 response.setError("");
                 response.setReturnNotNull(returnNotNull);
                 injectSuccInvoke(invokeTimespan);

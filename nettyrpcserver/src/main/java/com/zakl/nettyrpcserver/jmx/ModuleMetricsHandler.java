@@ -156,8 +156,6 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
             JMXServiceURL url = new JMXServiceURL(moduleMetricsJmxUrl);
             JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
             connection = jmxc.getMBeanServerConnection();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

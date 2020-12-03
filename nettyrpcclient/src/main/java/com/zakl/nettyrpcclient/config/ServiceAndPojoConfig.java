@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @author ZhangJiaKui
@@ -166,6 +169,8 @@ public class ServiceAndPojoConfig {
             String type = url.getProtocol();
             if (type.equals("file")) {
                 fileNames.addAll(getAllClassNameByFile(new File(url.getPath()), childPackage, packageName));
+            } else if (type.equals("jar")) {
+                fileNames.addAll(getClassNameByJar(url.getPath(), childPackage, packageName));
             }
         }
         return fileNames;
@@ -191,6 +196,34 @@ public class ServiceAndPojoConfig {
         }
         return serviceLocationList;
     }
+
+    private static List<String> getClassNameByJar(String jarPath, boolean childPackage, String packageName) {
+        List<String> myClassName = new ArrayList<>();
+        String[] jarInfo = jarPath.split("!");
+        String jarFilePath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
+        try {
+            JarFile jarFile = new JarFile(jarFilePath);
+            Enumeration<JarEntry> entrys = jarFile.entries();
+            while (entrys.hasMoreElements()) {
+                JarEntry jarEntry = entrys.nextElement();
+                String entryName = jarEntry.getName();
+                if (entryName.endsWith(".class")) {
+                    String packagePath = packageName.replaceAll("\\.", "/");
+                    if (entryName.contains(packagePath)) {
+                        String className = entryName.replaceAll("/", ".").substring(entryName.indexOf(packagePath));
+                        myClassName.add(className.substring(0, className.length() - 6));
+                    }
+                } else if (childPackage) {
+
+                    //jar 包架构
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return myClassName;
+    }
+
 
     public static String getLocalPojo(String responsePojoName) {
         return remoteToLocalPojoMap.getOrDefault(responsePojoName, responsePojoName);
