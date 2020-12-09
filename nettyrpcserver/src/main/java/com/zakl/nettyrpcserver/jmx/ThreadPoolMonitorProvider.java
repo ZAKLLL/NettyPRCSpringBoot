@@ -65,25 +65,25 @@ public class ThreadPoolMonitorProvider {
     }
 
     //todo 暂未使用,先行放行
-//    @Bean
-//    @DependsOn("registry")
-//    public ConnectorServerFactoryBean connectorServer() throws MalformedObjectNameException {
-//        MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
-//        String ipAddr = StringUtils.isNotEmpty(ref.getServerAddress()) ? StringUtils.substringBeforeLast(ref.getServerAddress(), DELIMITER) : "localhost";
-//        url = "service:jmx:rmi://" + ipAddr + "/jndi/rmi://" + ipAddr + ":1099/nettyrpcstatus";
-//        System.out.println("NettyRPC JMX MonitorURL : [" + url + "]");
-//        ConnectorServerFactoryBean connectorServerFactoryBean = new ConnectorServerFactoryBean();
-//        connectorServerFactoryBean.setObjectName("connector:name=rmi");
-//        connectorServerFactoryBean.setServiceUrl(url);
-//        return connectorServerFactoryBean;
-//    }
+    @Bean
+    @DependsOn("registry")
+    public ConnectorServerFactoryBean connectorServer() throws MalformedObjectNameException {
+        MessageRecvExecutor ref = MessageRecvExecutor.getInstance();
+        String ipAddr = StringUtils.isNotEmpty(ref.getServerAddress()) ? StringUtils.substringBeforeLast(ref.getServerAddress(), DELIMITER) : "localhost";
+        url = "service:jmx:rmi://" + ipAddr + "/jndi/rmi://" + ipAddr + ":1099/nettyrpcstatus";
+        System.out.println("NettyRPC JMX MonitorURL : [" + url + "]");
+        ConnectorServerFactoryBean connectorServerFactoryBean = new ConnectorServerFactoryBean();
+        connectorServerFactoryBean.setObjectName("connector:name=rmi");
+        connectorServerFactoryBean.setServiceUrl(url);
+        return connectorServerFactoryBean;
+    }
 
     public static void monitor(ThreadPoolStatus status) throws IOException, MalformedObjectNameException, ReflectionException, MBeanException, InstanceNotFoundException {
         MBeanServerConnectionFactoryBean mBeanServerConnectionFactoryBean = new MBeanServerConnectionFactoryBean();
         mBeanServerConnectionFactoryBean.setServiceUrl(url);
         mBeanServerConnectionFactoryBean.afterPropertiesSet();
         MBeanServerConnection connection = mBeanServerConnectionFactoryBean.getObject();
-        ObjectName objectName = new ObjectName("com.zakl.nettyrpcserver.jmx:name=threadPoolStatus,type=ThreadPoolStatus");
+        ObjectName objectName = new ObjectName("com.zakl.nettyrpcserver.parallel:name=threadPoolStatus,type=ThreadPoolStatus");
 
         connection.invoke(objectName, JMX_POOL_SIZE_METHOD, new Object[]{status.getPoolSize()}, new String[]{int.class.getName()});
         connection.invoke(objectName, JMX_ACTIVE_COUNT_METHOD, new Object[]{status.getActiveCount()}, new String[]{int.class.getName()});

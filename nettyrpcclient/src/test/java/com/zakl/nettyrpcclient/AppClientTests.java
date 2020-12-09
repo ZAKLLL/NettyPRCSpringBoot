@@ -29,7 +29,6 @@ class AppClientTests {
 
         AsyncInvoker invoker = new AsyncInvoker();
 
-        //todo 是否能使用lambda表达式
         CostTime elapse0 = invoker.submit(costTimeCalculate::calculate, CostTime.class);
 
         Integer elapse1 = invoker.submit(() -> addCalculate.add(13, 23), Integer.class);

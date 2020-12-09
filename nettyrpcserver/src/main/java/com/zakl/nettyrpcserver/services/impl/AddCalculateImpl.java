@@ -36,11 +36,8 @@ public class AddCalculateImpl implements AddCalculate {
 
         System.out.println("add方法调用");
         if (a == 100) {
-//            return ((AddCalculate) BeanUtils.getBean(AddCalculate.SERVICE_BEAN_NAME)).add2(a, b);
-//            return add2(a, b);
-            return this.add2(a, b);
+            return add2(a, b);
         }
-
         return a + b;
     }
 
