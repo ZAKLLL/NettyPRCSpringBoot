@@ -2,8 +2,11 @@ package com.zakl.nettyrpc.common.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,8 +35,15 @@ public class JsonUtils {
         }
         Object[] ret = new Object[jsons.length];
         for (int i = 0; i < ret.length; i++) {
+
+
+            //todo 泛型加载
             Class c = Thread.currentThread().getContextClassLoader().loadClass(unBoxTypeMap.getOrDefault(types[i], types[i]));
+
+//            JSON.parseObject(jsons[i], new TypeReference<List<String>>(){});
+
             ret[i] = JSON.parseObject(jsons[i], c);
+
         }
         return ret;
     }
@@ -50,5 +60,8 @@ public class JsonUtils {
         return JSONObject.parseObject(jsonData, clazz);
     }
 
+    public static String getBoxType(String type) {
+        return unBoxTypeMap.getOrDefault(type, type);
+    }
 
 }

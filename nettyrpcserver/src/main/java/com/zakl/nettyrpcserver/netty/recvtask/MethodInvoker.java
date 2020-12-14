@@ -46,8 +46,8 @@ public class MethodInvoker {
     public Object invoke(MessageRequest request) throws Throwable {
         String methodName = request.getMethodName();
         String[] parameters = request.getParametersVal();
-        String[] typeParameters = request.getParameterTypes();
-        Object[] args = JsonUtils.jsonsToObjects(parameters, typeParameters);
+        String[] argsTypes = request.getArgsTypes();
+        Object[] args = JsonUtils.jsonsToObjects(parameters, argsTypes);
         sw.reset();
         sw.start();
         Object result = MethodUtils.invokeMethod(serviceBean, methodName, args);

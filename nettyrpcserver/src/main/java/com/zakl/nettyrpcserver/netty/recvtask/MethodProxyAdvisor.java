@@ -63,7 +63,7 @@ public class MethodProxyAdvisor implements MethodInterceptor {
         Object handlerBean = handlerMap.get(className);
         String methodName = request.getMethodName();
         String[] parametersInJson = request.getParametersVal();
-        String[] parameterTypesInString = request.getParameterTypes();
+        String[] argsTypes = request.getArgsTypes();
 
         boolean existFilter = ServiceFilterBinder.class.isAssignableFrom(handlerBean.getClass()) && ((ServiceFilterBinder) handlerBean).getFilter() != null;
         ((MethodInvoker) invocation.getThis()).setServiceBean(existFilter ? ((ServiceFilterBinder) handlerBean).getObject() : handlerBean);
@@ -74,7 +74,7 @@ public class MethodProxyAdvisor implements MethodInterceptor {
             if (processors.getFilter() != null) {
                 Filter filter = processors.getFilter();
                 //todo 优化
-                Object[] args = JsonUtils.jsonsToObjects(parametersInJson, parameterTypesInString);
+                Object[] args = JsonUtils.jsonsToObjects(parametersInJson, argsTypes);
                 Class<?>[] parameterTypes = ClassUtils.toClass(args);
                 Method method = MethodUtils.getMatchingAccessibleMethod(processors.getObject().getClass(), methodName, parameterTypes);
                 if (filter.before(method, processors.getObject(), args)) {

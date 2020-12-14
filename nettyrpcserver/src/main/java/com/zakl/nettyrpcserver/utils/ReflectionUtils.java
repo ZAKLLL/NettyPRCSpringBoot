@@ -17,6 +17,7 @@ package com.zakl.nettyrpcserver.utils;
 
 import com.google.common.collect.ImmutableMap;
 import com.zakl.nettyrpc.common.exception.CreateProxyException;
+import com.zakl.nettyrpc.common.util.JsonUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.*;
@@ -277,20 +278,16 @@ public class ReflectionUtils {
             }
             searchType = searchType.getSuperclass();
         }
-        return null;
+        throw new NoSuchMethodException(methodName);
     }
 
-    public static Method findDeclaredMethod(final Class<?> cls, final String methodName, final String[] parameterTypes) throws NoSuchMethodException {
+    public static Method findDeclaredMethod(final Class<?> cls, final String methodName, final String[] parameterTypes) {
         Method method = null;
-        //指定以String 的方式获取参数的Type
-//        try {
-//            method = cls.getDeclaredMethod(methodName, parameterTypes);
-//            return method;
-//        } catch (NoSuchMethodException e) {
         for (Method m : cls.getDeclaredMethods()) {
             if (m.getName().equals(methodName)) {
                 boolean find = true;
                 Class[] paramType = m.getParameterTypes();
+//                Type[] paramType = m.getGenericParameterTypes();
                 if (paramType.length != parameterTypes.length) {
                     continue;
                 }
@@ -305,9 +302,6 @@ public class ReflectionUtils {
                     break;
                 }
             }
-        }
-        if (method == null) {
-            throw new NoSuchMethodException(methodName);
         }
         return method;
     }

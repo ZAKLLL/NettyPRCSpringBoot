@@ -33,8 +33,11 @@ public class MessageRequest implements Serializable {
     private String messageId;
     private String className;
     private String methodName;
-    //String 表示的Type
+    //String 表示的方法参数Type
     private String[] parameterTypes;
+
+    //String 表示实际传入的参数类型
+    private String[] argsTypes;
 
     //json 字符串
     private String[] parametersVal;

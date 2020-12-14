@@ -43,7 +43,7 @@ public class MessageSendProxy extends AbstractInvocationHandler {
         rpcServerLoaderKey = host + ":" + port;
     }
 
-    public MessageSendProxy() {
+    private MessageSendProxy() {
 
     }
 
@@ -54,18 +54,23 @@ public class MessageSendProxy extends AbstractInvocationHandler {
         request.setClassName(StringUtils.isEmpty(remoteInterFaceName) ? method.getDeclaringClass().getName() : remoteInterFaceName);
         request.setMethodName(method.getName());
         //将参数类型以全限定名的String传入
-        String[] typeParameters = new String[method.getParameterTypes().length];
-        request.setParameterTypes(typeParameters);
-        for (int i = 0; i < typeParameters.length; i++) {
-            typeParameters[i] = ServiceAndPojoConfig.getRemotePojo(method.getParameterTypes()[i].getCanonicalName());
-        }
-        //将参数值以json的格式传入
+        String[] parameterTypes = new String[method.getParameterTypes().length];
+        String[] argsTypes = new String[args.length];
         String[] parametersValInJson = new String[args.length];
+        request.setParameterTypes(parameterTypes);
+        request.setArgsTypes(argsTypes);
         request.setParametersVal(parametersValInJson);
-        for (int i = 0; i < parametersValInJson.length; i++) {
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+            parameterTypes[i] = ServiceAndPojoConfig.getRemotePojo(method.getParameterTypes()[i].getCanonicalName());
+            String genericTypeName = args[i].getClass().getGenericSuperclass().getTypeName();
+            //匿名内部类的时候canonicalName为null,说明参数带泛型
+            String canonicalName = args[i].getClass().getCanonicalName();
+            String typeName = canonicalName == null ? genericTypeName : canonicalName;
+            argsTypes[i] = ServiceAndPojoConfig.getRemotePojo(typeName);
             parametersValInJson[i] = JSON.toJSON(args[i]).toString();
         }
-
+        //将参数值以json的格式传入
         RpcServerLoader loader = RpcServerLoader.getInstance(rpcServerLoaderKey);
         MessageSendInitializeTask msgSendTask = loader.getMessageSendInitializeTask();
         if (msgSendTask == null || !msgSendTask.getConnected().get()) {

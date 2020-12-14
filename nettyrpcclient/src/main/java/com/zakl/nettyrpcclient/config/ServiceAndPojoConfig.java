@@ -230,6 +230,14 @@ public class ServiceAndPojoConfig {
     }
 
     public static String getRemotePojo(String localPojoName) {
-        return localToRemotePojoMap.getOrDefault(localPojoName, localPojoName);
+        //带泛型的情况
+        if (localPojoName.contains("<") && localPojoName.contains(">")) {
+            int i = localPojoName.indexOf("<");
+            String fa = localPojoName.substring(0, i);
+            String sons = localPojoName.substring(i + 1, localPojoName.length() - 1);
+            return localToRemotePojoMap.getOrDefault(fa, fa) + "<" + getRemotePojo(sons) + ">";
+        } else {
+            return localToRemotePojoMap.getOrDefault(localPojoName, localPojoName);
+        }
     }
 }

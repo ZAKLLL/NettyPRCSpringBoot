@@ -1,5 +1,9 @@
 package com.zakl.nettyrpcclient.services;
 
+import com.zakl.nettyrpcclient.pojo.Person;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,4 +17,10 @@ public interface Test {
     Map<String, List<Integer>> mapTest();
 
     void save();
+
+    <T> T get(T t);
+
+    String sendList(List<String> objects);
+
+    String sendList2(List<Person> strings);
 }

@@ -22,9 +22,6 @@ public class AppServer implements CommandLineRunner {
     public static void main(String[] args) {
 
         SpringApplication.run(AppServer.class, args);
-//        SpringApplication app = new SpringApplication(AppServer.class);
-//        app.setApplicationStartup(new BufferingApplicationStartup(2048));
-//        app.run(args);
     }
 
     //启动Netty 服务

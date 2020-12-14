@@ -1,5 +1,6 @@
 package com.zakl.nettyrpcserver.services.impl;
 
+import com.zakl.nettyrpcserver.pojo.Person;
 import com.zakl.nettyrpcserver.services.Test;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,26 @@ public class TestImpl implements Test {
     @Override
     public void save() {
         System.out.println("save.....");
+    }
+
+    @Override
+    public <T> T get(T t) {
+        return t;
+    }
+
+    @Override
+    public String sendList(List<String> objects) {
+        for (String object : objects) {
+            System.out.println(object);
+        }
+        return null;
+    }
+
+    @Override
+    public String sendList2(List<Person> strings) {
+        for (Person string : strings) {
+            System.out.println(string);
+        }
+        return null;
     }
 }

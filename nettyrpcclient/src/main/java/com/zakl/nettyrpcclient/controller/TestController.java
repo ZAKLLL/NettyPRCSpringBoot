@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
@@ -65,6 +63,33 @@ public class TestController {
         return test.mapTest();
     }
 
+    @GetMapping("/sendList")
+    public String sendList() {
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("Hello");
+        strings.add("Hello");
+        strings.add("Hello");
+        return test.sendList(strings);
+    }
+
+    @GetMapping("/sendList2")
+    public String sendList2() {
+        LinkedList<String> strings = new LinkedList<>();
+        strings.add("Hello");
+        strings.add("Hello");
+        strings.add("Hello");
+        return test.sendList(strings);
+    }
+
+    @GetMapping("/sendList3")
+    public String sendList3() {
+        LinkedList<Person> strings = new LinkedList<Person>(){};
+        Person person = new Person();
+        person.setName("Asd");
+        strings.add(person);
+        return test.sendList2(strings);
+    }
+
     @GetMapping("/p2")
     public String p2() {
         Person person = new Person();
@@ -108,6 +133,11 @@ public class TestController {
     public String save() {
         test.save();
         return "success";
+    }
+
+    @GetMapping("/get")
+    public Object get() {
+        return test.get(new Date());
     }
 
 }
