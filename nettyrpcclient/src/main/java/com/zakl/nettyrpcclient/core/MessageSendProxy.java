@@ -61,6 +61,10 @@ public class MessageSendProxy extends AbstractInvocationHandler {
 
         //先从nacos获取配置文件,然后在本地获取连接,进行通信
         Instance serverInstance = namingService.selectOneHealthyInstance("nettyrpcserver");
+        if (serverInstance==null){
+            log.info("no available server instance");
+            throw new RuntimeException("no available server instance");
+        }
         String rpcServerLoaderKey = serverInstance.getIp() + ":" + serverInstance.getPort();
         RpcServerLoader loader = RpcServerLoader.getInstance(rpcServerLoaderKey);
         MessageSendInitializeTask msgSendTask = loader.getMessageSendInitializeTask();
