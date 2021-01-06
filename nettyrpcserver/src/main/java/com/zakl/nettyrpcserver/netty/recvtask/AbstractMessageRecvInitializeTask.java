@@ -15,15 +15,15 @@
  */
 package com.zakl.nettyrpcserver.netty.recvtask;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.model.MessageResponse;
 import com.zakl.nettyrpc.common.util.BeanUtils;
+import com.zakl.nettyrpcserver.filter.ModuleFilterChainWrapper;
 import com.zakl.nettyrpcserver.moudular.Modular;
 import com.zakl.nettyrpcserver.moudular.ModuleInvoker;
 import com.zakl.nettyrpcserver.moudular.ModuleProvider;
-import com.zakl.nettyrpcserver.filter.ModuleFilterChainWrapper;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
@@ -66,7 +66,7 @@ public abstract class AbstractMessageRecvInitializeTask implements Callable<Bool
                 //有可能是 返回了null,或者void返回
                 if (result != null) {
                     response.setResponseType(result.getClass().getCanonicalName());
-                    response.setJsonResult(JSON.toJSON(result).toString());
+                    response.setJsonResult(JSONObject.toJSONString(result));
                 }
                 response.setError("");
                 response.setReturnNotNull(returnNotNull);

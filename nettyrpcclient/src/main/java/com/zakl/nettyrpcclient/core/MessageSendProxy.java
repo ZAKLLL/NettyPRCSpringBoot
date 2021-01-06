@@ -16,6 +16,7 @@
 package com.zakl.nettyrpcclient.core;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.annotations.Beta;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
@@ -68,7 +69,8 @@ public class MessageSendProxy extends AbstractInvocationHandler {
             String canonicalName = args[i].getClass().getCanonicalName();
             String typeName = canonicalName == null ? genericTypeName : canonicalName;
             argsTypes[i] = ServiceAndPojoConfig.getRemotePojo(typeName);
-            parametersValInJson[i] = JSON.toJSON(args[i]).toString();
+//            parametersValInJson[i] = JSON.toJSON(args[i]).toString();
+            parametersValInJson[i] = JSONObject.toJSONString(args[i]);
         }
         //将参数值以json的格式传入
         RpcServerLoader loader = RpcServerLoader.getInstance(rpcServerLoaderKey);

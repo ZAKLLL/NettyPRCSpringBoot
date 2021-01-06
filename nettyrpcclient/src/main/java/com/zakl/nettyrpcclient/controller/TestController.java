@@ -82,7 +82,7 @@ public class TestController {
     }
 
     @GetMapping("/sendList3")
-    public String sendList3() {
+    public List<Person> sendList3() {
         LinkedList<Person> strings = new LinkedList<Person>(){};
         Person person = new Person();
         person.setName("Asd");

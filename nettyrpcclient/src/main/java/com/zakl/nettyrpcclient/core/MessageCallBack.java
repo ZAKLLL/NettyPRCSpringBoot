@@ -17,6 +17,7 @@ package com.zakl.nettyrpcclient.core;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zakl.nettyrpc.common.config.RpcSystemConfig;
 import com.zakl.nettyrpc.common.exception.InvokeModuleException;
 import com.zakl.nettyrpc.common.exception.InvokeTimeoutException;
@@ -58,7 +59,7 @@ public class MessageCallBack {
                     if (this.response.getError().isEmpty()) {
                         String localPojoName = ServiceAndPojoConfig.getLocalPojo(this.response.getResponseType());
                         String jsonResult = this.response.getJsonResult();
-                        return jsonResult == null ? null : JSON.parseObject(jsonResult, this.getClass().getClassLoader().loadClass(localPojoName));
+                        return jsonResult == null ? null : JSONObject.parseObject(jsonResult, this.getClass().getClassLoader().loadClass(localPojoName));
                     } else {
                         throw new InvokeModuleException(this.response.getError());
                     }

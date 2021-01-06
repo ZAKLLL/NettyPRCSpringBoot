@@ -22,7 +22,7 @@ public interface Test {
 
     String sendList(List<String> objects);
 
-    String sendList2(List<Person> strings);
+    List<Person> sendList2(List<Person> strings);
 
 
 }

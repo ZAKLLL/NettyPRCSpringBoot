@@ -49,10 +49,10 @@ public class TestImpl implements Test {
     }
 
     @Override
-    public String sendList2(List<Person> strings) {
+    public List<Person> sendList2(List<Person> strings) {
         for (Person string : strings) {
             System.out.println(string);
         }
-        return null;
+        return strings;
     }
 }
