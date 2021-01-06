@@ -1,5 +1,9 @@
 package com.zakl.nettyrpcclient.controller;
 
+import cn.hutool.core.lang.Dict;
+import com.alibaba.nacos.api.annotation.NacosInjected;
+import com.alibaba.nacos.api.exception.NacosException;
+import com.alibaba.nacos.api.naming.NamingService;
 import com.zakl.nettyrpc.log.annotation.OperationLog;
 import com.zakl.nettyrpc.log.enums.OperationType;
 import com.zakl.nettyrpcclient.pojo.Person;
@@ -138,6 +142,17 @@ public class TestController {
     @GetMapping("/get")
     public Object get() {
         return test.get(new Date());
+    }
+
+    @NacosInjected
+    private NamingService namingService;
+
+    @GetMapping("/getInstance")
+    public Object getInstance() throws NacosException {
+
+        return Dict.create()
+                .set("ServerStatus",namingService.getServerStatus())
+                .set("instanse",namingService.getAllInstances("nettyrpcserver"));
     }
 
 }

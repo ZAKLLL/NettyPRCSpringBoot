@@ -32,13 +32,13 @@ public class ServiceAndPojoConfig {
     private static String localServicePackage;
     private static String remoteServicePackage;
     //默认指定的远程服务ip和port
-    private static String remoteIpAddr;
-    private static Integer remotePort;
-    private static String protocol;
+//    private static String remoteIpAddr;
+//    private static Integer remotePort;
+//    private static String protocol;
     private static String pojoMapping;
 
-    //自定义服务对应远程的rpc服务实现
-    private static Map<String, String[]> serviceRemoteAddrMap = new HashMap<>();
+    //自定义服务对应远程的rpc服务实现 更改为nacos获取
+//    private static Map<String, String[]> serviceRemoteAddrMap = new HashMap<>();
 
     //pojo 本地全限定名->远程全限定名
     public static Map<String, String> localToRemotePojoMap;
@@ -57,37 +57,37 @@ public class ServiceAndPojoConfig {
         ServiceAndPojoConfig.remoteServicePackage = remoteServicePackage;
     }
 
-    @Value(value = "${netty.rpc.server.ipAddr}")
-    public void setRemoteIpAddr(String ipAddr) {
-        ServiceAndPojoConfig.remoteIpAddr = ipAddr;
-    }
+//    @Value(value = "${netty.rpc.server.ipAddr}")
+//    public void setRemoteIpAddr(String ipAddr) {
+//        ServiceAndPojoConfig.remoteIpAddr = ipAddr;
+//    }
+//
+//    @Value(value = "${netty.rpc.server.port}")
+//    public void setRemotePort(int remotePort) {
+//        ServiceAndPojoConfig.remotePort = remotePort;
+//    }
 
-    @Value(value = "${netty.rpc.server.port}")
-    public void setRemotePort(int remotePort) {
-        ServiceAndPojoConfig.remotePort = remotePort;
-    }
-
-    @Value(value = "${netty.rpc.server.protocol}")
-    public void setProtocol(String protooal) {
-        ServiceAndPojoConfig.protocol = protooal;
-    }
+//    @Value(value = "${netty.rpc.server.protocol}")
+//    public void setProtocol(String protooal) {
+//        ServiceAndPojoConfig.protocol = protooal;
+//    }
 
     @Value(value = "${netty.rpc.server.pojoMapping}")
     public void setPojoMapping(String pojoMapping) {
         ServiceAndPojoConfig.pojoMapping = pojoMapping;
     }
 
-    @Value(value = "${netty.rpc.server.service.remoteAddr}")
-    public void setCustomRemoteInfo(String[] customRemoteInfoS) {
-        for (String customRemoteInfo : customRemoteInfoS) {
-            String[] split = customRemoteInfo.split(":");
-            //serviceName:ip:port:protocol
-            if (split.length != 4) {
-                continue;
-            }
-            serviceRemoteAddrMap.put(split[0], split);
-        }
-    }
+//    @Value(value = "${netty.rpc.server.service.remoteAddr}")
+//    public void setCustomRemoteInfo(String[] customRemoteInfoS) {
+//        for (String customRemoteInfo : customRemoteInfoS) {
+//            String[] split = customRemoteInfo.split(":");
+//            //serviceName:ip:port:protocol
+//            if (split.length != 4) {
+//                continue;
+//            }
+//            serviceRemoteAddrMap.put(split[0], split);
+//        }
+//    }
 
     //动态注入bean到context中
     @PostConstruct
@@ -101,23 +101,25 @@ public class ServiceAndPojoConfig {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NettyRpcReference.class);
             beanDefinitionBuilder.addPropertyValue("localInterfaceName", name);
             beanDefinitionBuilder.addPropertyValue("remoteInterfaceName", name.replace(localServicePackage, remoteServicePackage));
-            if (serviceRemoteAddrMap.containsKey(name)) {
-                //使用自定义的远程服务
-                String[] cusRemoteServerInfo = serviceRemoteAddrMap.get(name);
-                String cusIp = cusRemoteServerInfo[1];
-                int cusPort = Integer.parseInt(cusRemoteServerInfo[2]);
-                String cusProtocol = cusRemoteServerInfo[3];
-                beanDefinitionBuilder.addPropertyValue("remoteIp", cusIp);
-                beanDefinitionBuilder.addPropertyValue("remotePort", cusPort);
-                NettyClientStarter.connectedToServer(cusIp, cusPort, RpcSerializeProtocol.valueOf(cusProtocol));
-            } else {
-                beanDefinitionBuilder.addPropertyValue("remoteIp", remoteIpAddr);
-                beanDefinitionBuilder.addPropertyValue("remotePort", remotePort);
-            }
+//            if (serviceRemoteAddrMap.containsKey(name)) {
+//                //使用自定义的远程服务
+//                String[] cusRemoteServerInfo = serviceRemoteAddrMap.get(name);
+//                String cusIp = cusRemoteServerInfo[1];
+//                int cusPort = Integer.parseInt(cusRemoteServerInfo[2]);
+//                String cusProtocol = cusRemoteServerInfo[3];
+//                beanDefinitionBuilder.addPropertyValue("remoteIp", cusIp);
+//                beanDefinitionBuilder.addPropertyValue("remotePort", cusPort);
+//                //todo 启动不注册 连接才进行注册
+//                NettyClientStarter.connectedToServer(cusIp, cusPort, RpcSerializeProtocol.valueOf(cusProtocol));
+//            } else {
+//                beanDefinitionBuilder.addPropertyValue("remoteIp", remoteIpAddr);
+//                beanDefinitionBuilder.addPropertyValue("remotePort", remotePort);
+//            }
             defaultListableBeanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
         }
         //使用默认的ip+port+protocol启动一次
-        NettyClientStarter.connectedToServer(remoteIpAddr, remotePort, RpcSerializeProtocol.valueOf(protocol));
+        //todo 启动不注册 连接才进行注册
+//        NettyClientStarter.connectedToServer(remoteIpAddr, remotePort, RpcSerializeProtocol.valueOf(protocol));
         //配置pojo映射
         initPojoMappingMap();
     }

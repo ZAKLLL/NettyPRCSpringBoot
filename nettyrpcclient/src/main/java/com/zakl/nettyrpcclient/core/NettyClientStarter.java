@@ -3,8 +3,10 @@ package com.zakl.nettyrpcclient.core;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 
 /**
  * @author ZhangJiaKui
@@ -14,21 +16,26 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class NettyClientStarter {
-    private static ConcurrentHashMap<String, Boolean> connectStatusMap = new ConcurrentHashMap<>();
-    private static Lock lock = new ReentrantLock();
+    private final static ConcurrentHashMap<String, Boolean> connectStatusMap = new ConcurrentHashMap<>();
+    private final static Lock lock = new ReentrantLock();
 
 
     //启动Client客户端
-    public static void connectedToServer(String ip, int port, RpcSerializeProtocol protocol) {
+    public static Future<Boolean> connectedToServer(String ip, int port, RpcSerializeProtocol protocol) {
         String remoteAddr = ip + ":" + port;
+        Future<Boolean> ret = null;
         if (!connectStatusMap.getOrDefault(remoteAddr, false)) {
             lock.lock();
-            if (!connectStatusMap.getOrDefault(remoteAddr, false)) {
-                RpcServerLoader.getInstance(ip + ":" + port).load(ip, port, protocol);
-                connectStatusMap.put(remoteAddr, true);
+            try {
+                if (!connectStatusMap.getOrDefault(remoteAddr, false)) {
+                    ret = RpcServerLoader.getInstance(ip + ":" + port).load(ip, port, protocol);
+                    connectStatusMap.put(remoteAddr, true);
+                }
+            } finally {
                 lock.unlock();
             }
         }
+        return ret;
     }
 
     public static ConcurrentHashMap<String, Boolean> getConnectStatusMap() {

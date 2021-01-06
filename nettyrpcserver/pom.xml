@@ -44,6 +44,14 @@
             <artifactId>asm-commons</artifactId>
             <version>5.0.3</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.alibaba.boot/nacos-config-spring-boot-starter -->
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>nacos-discovery-spring-boot-starter</artifactId>
+            <version>0.2.7</version>
+        </dependency>
+
     </dependencies>
 
     <build>

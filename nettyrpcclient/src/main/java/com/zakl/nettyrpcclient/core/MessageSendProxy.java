@@ -17,16 +17,21 @@ package com.zakl.nettyrpcclient.core;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.nacos.api.naming.NamingService;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.google.common.annotations.Beta;
 import com.google.common.reflect.AbstractInvocationHandler;
+import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
 import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
 import com.zakl.nettyrpc.common.model.MessageRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 /**
  * @author tangjie<https: / / github.com / tang-jie>
@@ -35,13 +40,15 @@ import java.util.UUID;
  * @blogs http://www.cnblogs.com/jietang/
  * @since 2016/10/7
  */
+@Slf4j
 public class MessageSendProxy extends AbstractInvocationHandler {
     private String remoteInterFaceName;
-    private String rpcServerLoaderKey;
 
-    public MessageSendProxy(String remoteInterFaceName, String host, int port) {
+    //由配置文件注入
+    private static NamingService namingService;
+
+    public MessageSendProxy(String remoteInterFaceName) {
         this.remoteInterFaceName = remoteInterFaceName;
-        rpcServerLoaderKey = host + ":" + port;
     }
 
     private MessageSendProxy() {
@@ -50,6 +57,28 @@ public class MessageSendProxy extends AbstractInvocationHandler {
 
     @Override
     public Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
+        MessageRequest request = constructMessageRequest(method, args);
+
+        //先从nacos获取配置文件,然后在本地获取连接,进行通信
+        Instance serverInstance = namingService.selectOneHealthyInstance("nettyrpcserver");
+        String rpcServerLoaderKey = serverInstance.getIp() + ":" + serverInstance.getPort();
+        RpcServerLoader loader = RpcServerLoader.getInstance(rpcServerLoaderKey);
+        MessageSendInitializeTask msgSendTask = loader.getMessageSendInitializeTask();
+        if (msgSendTask == null || !msgSendTask.getConnected().get()) {
+            log.info("Not connected NettyRPCServer yet");
+            log.info("begin to connect to server");
+            String protocol = serverInstance.getMetadata().get("protocol");
+            Future<Boolean> future = NettyClientStarter.connectedToServer(serverInstance.getIp(), serverInstance.getPort(), RpcSerializeProtocol.valueOf(protocol));
+            if (!future.get()) {
+                throw new RuntimeException("connect to Netty Server error");
+            }
+        }
+        MessageSendHandler handler = loader.getMessageSendHandler();
+        MessageCallBack callBack = handler.sendRequest(request);
+        return callBack.start();
+    }
+
+    public MessageRequest constructMessageRequest(Method method, Object[] args) {
         MessageRequest request = new MessageRequest();
         request.setMessageId(UUID.randomUUID().toString());
         request.setClassName(StringUtils.isEmpty(remoteInterFaceName) ? method.getDeclaringClass().getName() : remoteInterFaceName);
@@ -69,18 +98,14 @@ public class MessageSendProxy extends AbstractInvocationHandler {
             String canonicalName = args[i].getClass().getCanonicalName();
             String typeName = canonicalName == null ? genericTypeName : canonicalName;
             argsTypes[i] = ServiceAndPojoConfig.getRemotePojo(typeName);
-//            parametersValInJson[i] = JSON.toJSON(args[i]).toString();
             parametersValInJson[i] = JSONObject.toJSONString(args[i]);
         }
-        //将参数值以json的格式传入
-        RpcServerLoader loader = RpcServerLoader.getInstance(rpcServerLoaderKey);
-        MessageSendInitializeTask msgSendTask = loader.getMessageSendInitializeTask();
-        if (msgSendTask == null || !msgSendTask.getConnected().get()) {
-            throw new RuntimeException("Not connected NettyRPCServer yet");
-        }
-        MessageSendHandler handler = loader.getMessageSendHandler();
-        MessageCallBack callBack = handler.sendRequest(request);
-        return callBack.start();
+        return request;
+    }
+
+
+    public static void setNamingService(NamingService namingService) {
+        MessageSendProxy.namingService = namingService;
     }
 }
 

@@ -1,5 +1,6 @@
 package com.zakl.nettyrpcserver;
 
+import com.alibaba.nacos.spring.context.annotation.discovery.EnableNacosDiscovery;
 import com.zakl.nettyrpcserver.config.NettyServerConfig;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

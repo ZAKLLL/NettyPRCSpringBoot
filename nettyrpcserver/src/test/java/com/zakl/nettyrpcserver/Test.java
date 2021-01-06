@@ -13,9 +13,6 @@ import java.util.Date;
  */
 public class Test {
     public static void main(String[] args) throws ClassNotFoundException {
-        String s = JSONObject.toJSONString(new Date());
-        System.out.println(s);
-        s = JSONObject.toJSON(new Date()).toString();
-        System.out.println(s);
+
     }
 }

@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -73,9 +74,9 @@ public class RpcServerLoader {
     }
 
 
-    public void load(String host, int port, RpcSerializeProtocol serializeProtocol) {
+    public Future<Boolean> load(String host, int port, RpcSerializeProtocol serializeProtocol) {
         if (StringUtils.isEmpty(host) || port <= 0) {
-            return;
+            return null;
         }
         messageSendInitializeTask = new MessageSendInitializeTask(eventLoopGroup, host, port, serializeProtocol);
         //不为空的情况,说明是重连,不用再new 一次,浪费资源
@@ -110,6 +111,7 @@ public class RpcServerLoader {
                 t.printStackTrace();
             }
         }, threadPoolExecutor);
+        return listenableFuture;
     }
 
     public void setMessageSendHandler(MessageSendHandler messageInHandler) {

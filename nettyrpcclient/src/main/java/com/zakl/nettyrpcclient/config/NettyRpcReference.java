@@ -37,8 +37,8 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     private String localInterfaceName;
     private String remoteInterfaceName;
-    private String remoteIp;
-    private int remotePort;
+//    private String remoteIp;
+//    private int remotePort;
     private static EventBus eventBus = new EventBus();
 
     @Override
@@ -56,7 +56,7 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
 
     @Override
     public Object getObject() {
-        return Reflection.newProxy(getObjectType(), new MessageSendProxy(remoteInterfaceName, remoteIp, remotePort));
+        return Reflection.newProxy(getObjectType(), new MessageSendProxy(remoteInterfaceName));
     }
 
     @Override
@@ -94,19 +94,19 @@ public class NettyRpcReference implements FactoryBean, DisposableBean {
         this.remoteInterfaceName = remoteInterfaceName;
     }
 
-    public String getRemoteIp() {
-        return remoteIp;
-    }
-
-    public void setRemoteIp(String remoteIp) {
-        this.remoteIp = remoteIp;
-    }
-
-    public int getRemotePort() {
-        return remotePort;
-    }
-
-    public void setRemotePort(int remotePort) {
-        this.remotePort = remotePort;
-    }
+//    public String getRemoteIp() {
+//        return remoteIp;
+//    }
+//
+//    public void setRemoteIp(String remoteIp) {
+//        this.remoteIp = remoteIp;
+//    }
+//
+//    public int getRemotePort() {
+//        return remotePort;
+//    }
+//
+//    public void setRemotePort(int remotePort) {
+//        this.remotePort = remotePort;
+//    }
 }
