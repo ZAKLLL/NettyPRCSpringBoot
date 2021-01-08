@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  nettyrpcserver:
+    # 不使用镜像,根据当前文件夹下的DockerFile 进行镜像构建
+    build: .
+    image: zakl/nettyrpcserver:1.0
+    command: java -jar nettyrpcserver-1.0.jar
+    networks:
+      - netty_network
+    ports:
+      - 18882:18882
+      - 8082:8082
+networks:
+  netty_network:
+    driver: bridge

@@ -23,7 +23,7 @@ import java.util.UUID;
  * @date 1/6/2021 2:27 PM
  */
 @Configuration
-@EnableNacosDiscovery(globalProperties = @NacosProperties(serverAddr = "127.0.0.1:8848"))
+@EnableNacosDiscovery
 public class NacosDiscovery {
 
 
@@ -40,10 +40,18 @@ public class NacosDiscovery {
     @Value("${netty.rpc.server.protocol}")
     private String protocol;
 
+    @Value("${netty.rpc.server.deploy.docker}")
+    private Boolean isDeployInDocker;
+
+    @Value("${netty.rpc.server.deploy.hostmachine.ip}")
+    private String hostMachineIp;
+
+
     @PostConstruct
     public void registerInstance() throws NacosException, UnknownHostException {
         Instance instance = new Instance();
-        String ipv4 = Inet4Address.getLocalHost().getHostAddress();
+
+        String ipv4 = isDeployInDocker ? hostMachineIp.trim() : Inet4Address.getLocalHost().getHostAddress();
         instance.setInstanceId(generateInstanceId(applicationName, ipv4, serverPort));
         instance.setIp(ipv4);
         instance.setPort(serverPort);

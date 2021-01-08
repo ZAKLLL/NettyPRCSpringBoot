@@ -15,17 +15,15 @@
  */
 package com.zakl.nettyrpcclient.core;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.google.common.annotations.Beta;
 import com.google.common.reflect.AbstractInvocationHandler;
+import com.zakl.nettyrpc.common.model.MessageRequest;
 import com.zakl.nettyrpc.common.serialize.RpcSerializeProtocol;
 import com.zakl.nettyrpcclient.config.ServiceAndPojoConfig;
 import com.zakl.nettyrpcclient.core.sendtask.MessageSendInitializeTask;
 import com.zakl.nettyrpcclient.handler.MessageSendHandler;
-import com.zakl.nettyrpc.common.model.MessageRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,7 +59,7 @@ public class MessageSendProxy extends AbstractInvocationHandler {
 
         //先从nacos获取配置文件,然后在本地获取连接,进行通信
         Instance serverInstance = namingService.selectOneHealthyInstance("nettyrpcserver");
-        if (serverInstance==null){
+        if (serverInstance == null) {
             log.info("no available server instance");
             throw new RuntimeException("no available server instance");
         }
@@ -73,7 +71,8 @@ public class MessageSendProxy extends AbstractInvocationHandler {
             log.info("begin to connect to server");
             String protocol = serverInstance.getMetadata().get("protocol");
             Future<Boolean> future = NettyClientStarter.connectedToServer(serverInstance.getIp(), serverInstance.getPort(), RpcSerializeProtocol.valueOf(protocol));
-            if (!future.get()) {
+            //connecting...
+            if (future == null || !future.get()) {
                 throw new RuntimeException("connect to Netty Server error");
             }
         }

@@ -85,12 +85,12 @@ public class NettyServerConfig implements DisposableBean {
 
         Executors.newSingleThreadExecutor().execute(ref::start);
 
-        if (enableJmxSupport) {
-            HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();
-            visitor.signal();
-            ModuleMetricsHandler.setModuleMetricsJmxPort(jmxPort);
-            ModuleMetricsHandler.getInstance().start();
-        }
+//        if (enableJmxSupport) {
+//            HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();
+//            visitor.signal();
+//            ModuleMetricsHandler.setModuleMetricsJmxPort(jmxPort);
+//            ModuleMetricsHandler.getInstance().start();
+//        }
     }
 
     public String getIpAddr() {

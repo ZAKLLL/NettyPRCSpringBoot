@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  nacos:
+    image: nacos/nacos-server
+    container_name: nacos
+    environment:
+      - MODE=standalone
+    networks:
+      - netty_network
+    ports:
+      - 8848:8848
+networks:
+  netty_network:
+    driver: bridge
